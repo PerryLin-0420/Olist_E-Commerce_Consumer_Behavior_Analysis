@@ -1,56 +1,59 @@
 # Olist_E-Commerce_Consumer_Behavior_Analysis
+
+**English** | [繁體中文](docs/README.zh-TW.md)
+
 It's an analysis about consumer behavior on Olist store. Especially modeling the consumer behavior to predict consume trends.
 
-## ETL：Raw_data → DuckDB
+## ETL: Raw_data → DuckDB
 
-將 `Raw_data/` 的 9 個 Olist CSV 載入 `DB/olist.duckdb`。
+Loads the 9 Olist CSV files in `Raw_data/` into `DB/olist.duckdb`.
 
-> `DB/` 不進版控（含 PK/FK 索引約 140 MB，超過 GitHub 單檔 100 MB 限制）。clone 後請執行下方指令於本機重建。
+> `DB/` is not version-controlled (with PK/FK indexes the file is ~140 MB, over GitHub's 100 MB per-file limit). After cloning, rebuild it locally with the commands below.
 
-### 執行方式
+### Usage
 
 ```bash
 pip install -r requirements.txt
 ETL_scripts\Auto_ETL.bat
 ```
 
-`Auto_ETL.bat` 會依序執行下列步驟，任一步失敗即中止，且**不會覆蓋**既有的正式 DB：
+`Auto_ETL.bat` runs the steps below in order. It aborts at the first failure and **never overwrites** the existing production DB in that case:
 
-| 步驟 | 腳本 | 說明 |
+| Step | Script | Description |
 |---|---|---|
-| 01 | `01_validate_raw.py` | 檢查 raw CSV 是否存在、表頭是否與 schema 一致 |
-| 02 | `02_load_raw.py` | 建立 `DB/olist_staging.duckdb`，依 `sql/schema.sql` 建表（含 PK/FK），以明確型別載入 |
-| 03 | `03_build_derived.py` | 依 `sql/derived.sql` 建立衍生表 `geolocation_zip` |
-| 04 | `04_quality_check.py` | 筆數與 CSV 對帳、金額精度檢查（hard）；已知資料問題統計（info） |
-| 05 | `05_publish.py` | 以驗證通過的 staging DB 替換 `DB/olist.duckdb` |
+| 01 | `01_validate_raw.py` | Checks that every raw CSV exists and its header matches the schema |
+| 02 | `02_load_raw.py` | Creates `DB/olist_staging.duckdb`, builds tables from `sql/schema.sql` (with PK/FK) and loads data with explicit types |
+| 03 | `03_build_derived.py` | Builds the derived table `geolocation_zip` from `sql/derived.sql` |
+| 04 | `04_quality_check.py` | Reconciles row counts against the CSVs and checks money precision (hard checks); reports known data issues (info) |
+| 05 | `05_publish.py` | Replaces `DB/olist.duckdb` with the validated staging DB |
 
-執行紀錄寫在 `ETL_scripts/logs/etl.log`（不進版控）。
+Run logs are written to `ETL_scripts/logs/etl.log` (not version-controlled).
 
-### 資料表
+### Tables
 
-| 資料表 | 主鍵 (PK) | 外鍵 (FK) |
+| Table | Primary Key (PK) | Foreign Key (FK) |
 |---|---|---|
 | `customers` | `customer_id` | |
 | `sellers` | `seller_id` | |
 | `product_category_name_translation` | `product_category_name` | |
 | `products` | `product_id` | |
 | `orders` | `order_id` | `customer_id` → `customers` |
-| `order_items` | (`order_id`, `order_item_id`) | `order_id` → `orders`、`product_id` → `products`、`seller_id` → `sellers` |
+| `order_items` | (`order_id`, `order_item_id`) | `order_id` → `orders`, `product_id` → `products`, `seller_id` → `sellers` |
 | `order_payments` | (`order_id`, `payment_sequential`) | `order_id` → `orders` |
 | `order_reviews` | (`review_id`, `order_id`) | `order_id` → `orders` |
-| `geolocation` | 無（原始資料含重複列） | |
-| `geolocation_zip` | 無宣告約束（衍生表，每個 `geolocation_zip_code_prefix` 一列） | |
+| `geolocation` | None (source data contains duplicate rows) | |
+| `geolocation_zip` | No declared constraint (derived table, one row per `geolocation_zip_code_prefix`) | |
 
-### 設計說明
+### Design Notes
 
-- **PK/FK 由 DuckDB 強制**：任何重複主鍵或孤兒外鍵都會使載入失敗；正式 DB 保留完整約束，可用 `SELECT * FROM duckdb_constraints()` 查詢。
-- **先建 staging 再替換**：所有步驟都在 `DB/olist_staging.duckdb` 進行，驗證全通過才替換正式 DB，失敗時不會留下半套資料。
-- **欄位名稱與原始 CSV 相同**（包含原檔拼字錯誤 `product_name_lenght`、`product_description_lenght`），方便對照來源。
-- 金額欄位使用 `DECIMAL(12, 2)`，避免浮點誤差。
+- **PK/FK enforced by DuckDB**: any duplicate primary key or orphan foreign key fails the load. The production DB keeps all constraints; inspect them with `SELECT * FROM duckdb_constraints()`.
+- **Build in staging, then swap**: every step runs against `DB/olist_staging.duckdb`, and the production DB is replaced only after all checks pass, so a failed run never leaves a half-built DB.
+- **Column names match the source CSVs** (including the original typos `product_name_lenght` and `product_description_lenght`) to keep them traceable to the raw files.
+- Money columns use `DECIMAL(12, 2)` to avoid floating-point errors.
 
-### 已知資料問題
+### Known Data Issues
 
-- `products` 有 2 個類別（`pc_gamer`、`portateis_cozinha_e_preparadores_de_alimentos`，共 13 筆商品）不在翻譯表中，因此未設 FK；另有 610 筆商品類別為 NULL。
-- `geolocation` 含 261,831 筆完全重複列、42 筆座標落在巴西境外；`geolocation_zip` 已去重、排除境外座標後以 zip prefix 彙總。
-- 158 個顧客 zip prefix、7 個賣家 zip prefix 在 `geolocation_zip` 中找不到。
-- `customer_unique_id` 非唯一：同一個人每筆訂單會有不同的 `customer_id`，有 2,997 個 `customer_unique_id` 對應多個 `customer_id`。
+- 2 categories in `products` (`pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`, 13 products in total) are missing from the translation table, so no FK is declared there. Another 610 products have a NULL category.
+- `geolocation` contains 261,831 exact duplicate rows and 42 points outside Brazil. `geolocation_zip` removes duplicates, excludes out-of-bounds points and aggregates by zip prefix.
+- 158 customer zip prefixes and 7 seller zip prefixes are not found in `geolocation_zip`.
+- `customer_unique_id` is not unique: the same person gets a different `customer_id` for every order, and 2,997 `customer_unique_id` values map to more than one `customer_id`.
