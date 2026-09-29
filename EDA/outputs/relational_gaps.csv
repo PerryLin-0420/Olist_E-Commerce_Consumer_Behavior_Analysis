@@ -1,0 +1,8 @@
+check,base_table,base_rows,affected,affected_rate
+Orders without order_items,orders,99441,775,0.007793566034130791
+Orders without order_reviews,orders,99441,768,0.0077231725344676745
+Orders without order_payments,orders,99441,1,1.0056214237588117e-05
+Products with NULL category,products,32951,610,0.018512336499651
+Products with untranslated category,products,32951,13,0.0003945252040909229
+Customers whose zip is not in geolocation,customers,99441,279,0.0028056837722870848
+Sellers whose zip is not in geolocation,sellers,3095,7,0.002261712439418417

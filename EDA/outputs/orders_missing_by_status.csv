@@ -1,0 +1,9 @@
+order_status,orders,order_approved_at,order_delivered_carrier_date,order_delivered_customer_date
+created,5,5,5,5
+approved,2,0,2,2
+invoiced,314,0,314,314
+processing,301,0,301,301
+shipped,1107,0,0,1107
+delivered,96478,14,2,8
+canceled,625,141,550,619
+unavailable,609,0,609,609
