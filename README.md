@@ -168,45 +168,44 @@ Outputs: `time_matrix/outputs/`, `time_matrix/charts/`.
 
 ## 💡 Conclusions and Recommendations
 
-These are the project author's inferences, drawn from the observed patterns in [EDA Findings](EDA/EDA_findings.md) and the random forest and time matrix analyses. Each point lists the evidence behind it; where the data does not support part of a point, that is stated.
+These are my personal views, inferred from the patterns observed in [EDA Findings](EDA/EDA_findings.md) and the random forest and time matrix analyses. For every point I list the evidence behind it; where the data cannot back part of a point, I say so directly.
 
 <a id="inferences"></a>
 
 ### Inferences
 
-1. **No long-term platform usage habit.**
-   - 97.8% of customers bought on a single date; a two-component mixture puts 99.05% of customers at a 1.9% chance of buying again.
-   - Customers first acquired in the Black Friday spike weeks repurchase within 180 days at 1.70%, the same as other weeks (2.02%, p = 0.13).
-   - Active customers do not form distinct segments: their random forest segmentation is weaker than that of same-size random samples of one-time customers.
+1. **There is no long-term usage habit on the platform.**
+   - 97.8% of customers bought on a single date only; a two-component mixture puts 99.05% of customers at a 1.9% chance of buying again.
+   - Even customers acquired in the Black Friday spike weeks repurchase within 180 days at only 1.70%, no different from other weeks (2.02%, p = 0.13). The big promotion did not bring in customers who come back more.
+   - Active customers do not form distinct segments either: their random forest segmentation is even weaker than that of same-size random samples of one-time customers.
 2. **Platform stickiness is extremely low.**
-   - Only 2.2% of customers reach a second purchase date; returning customers are 2.2% of weekly customers, including in the spike weeks.
-   - In 63% of seller × category pairs (sellers with ≥ 30 customers in the category) not a single customer came back.
-3. **Revenue depends almost entirely on new-customer acquisition, so a slowdown carries a high risk of a sharp fall in volume and revenue.**
-   - Weekly orders grew from 853 (2017) to 1,571 (Jan–Aug 2018), but were flat within 2018 (trend −4.4 orders/week, p = 0.37); weekly new customers were also flat (~1,516, p = 0.38).
-   - The largest spike (Black Friday week) was 2.3× the rolling baseline and 1.9× the 2018 weekly mean; order value did not rise in spike weeks (mean R$ 155 vs R$ 161), so spikes add volume but not value per order.
-   - With 97.8% one-time buyers there is almost no retained base to absorb a drop in acquisition.
-   - Limits: the data is a public sample of the marketplace ending in August 2018, and it contains no market-size, demographic or acquisition-cost data; the 2018 pattern is a plateau, not yet a measured decline, and a population-level saturation ("demographic dividend") cannot be measured from it.
+   - Only 2.2% of customers reach a second purchase date; returning customers are just 2.2% of weekly customers, spike weeks included.
+   - In 63% of seller × category pairs (sellers with ≥ 30 customers in the category), not a single customer came back.
+3. **Revenue rests almost entirely on new customers, so if acquisition slows, volume and revenue risk a sharp fall.**
+   - Weekly orders grew from 853 (2017) to 1,571 (Jan–Aug 2018), but had already flattened within 2018 (trend −4.4 orders/week, p = 0.37); weekly new customers were flat too (~1,516, p = 0.38).
+   - The largest spike (Black Friday week) was 2.3× the rolling baseline and 1.9× the 2018 weekly mean, yet order value did not rise in spike weeks (mean R$ 155 vs R$ 161): spikes bring volume, not value per order.
+   - With 97.8% one-time buyers, there is no retained base to hold revenue up when new customers drop off.
+   - Limits: the data is a public sample of the marketplace ending in August 2018, with no market-size, demographic or acquisition-cost data. The 2018 trend is a plateau, not yet a measured decline, and whether the demographic dividend has faded cannot be measured from this data.
 4. **Heavy goods do not concentrate among nearby buyers.**
-   - Shipments ≥ 10 kg within 100 km are ×0.96 the overall share (not over-represented); heavy goods concentrate at 100–300 km (×1.30), while items < 0.5 kg are over-represented within 100 km (×1.19).
-5. **Buying follows a fixed weekly rhythm, and the time slot shapes how many people buy, not how much they spend.** *(Phenomenon only; the reason buyers choose these hours is not inferred.)*
-   - Orders lean to the start of the week (Mon 16.3% → Sat 11.0%) and to the afternoon; the busiest slot is Tue 14:00. The week splits best into 3 segments: T1 (about 08:00–00:00, 95.8% of orders) and two night segments.
-   - The order-share pattern repeats in every period (r = 0.94–0.98), between odd and even weeks (0.98) and without the spike weeks (1.00).
-   - Order value and installments barely depend on the slot (epsilon² 0.0023 and 0.0049), and their weekday × hour patterns do not repeat between periods (r ≤ 0.22 and ≤ 0.36).
+   - Shipments ≥ 10 kg within 100 km are only ×0.96 the overall share (not over-represented); heavy goods concentrate at 100–300 km (×1.30), and what actually leans toward short distances is items < 0.5 kg (×1.19).
+5. **Target customers by region with freight-aware recommendations (weight, distance, value).**
+   - The premises are backed by data: the freight share falls as product value rises (Spearman ρ −0.78 across shipments); freight grows with distance in every weight tier and has a fixed part (R$ 11.7 + R$ 0.60 per 100 km for items < 0.5 kg); a random forest freight model explains 73% of freight variance (median error R$ 1.57), so freight can be estimated in advance.
+   - What needs correcting: a freight share below 20% is not the typical case — only 44.7% of shipments are at or below 20% (median 22%; 34.6% for items < 0.5 kg).
+   - Simulation: within a category, states facing a higher predicted freight share do not buy measurably less of it (slope −0.07, 95% CI −0.33 to +0.15). Capping every category × state at a 20% freight share gives +1.7% shipments overall (95% CI −3.4% to +8.6%), and +5–6% in the North and Northeast, with wide intervals.
+   - Charts: `random_forest/charts/sim_*.png`; tables: `random_forest/outputs/sim_*.csv`.
+   - **This inference cannot be verified at this point.** Freight share overlaps almost fully with region, so regional taste cannot be separated from freight, and the data has no impression or click records. Whether freight-aware recommendations work can only be confirmed with an A/B test.
+6. **Buying follows a fixed weekly rhythm; the time slot decides how many people buy, not how much they spend.** *(Phenomenon only; I do not infer why buyers choose these hours.)*
+   - Orders lean to the start of the week (Mon 16.3% → Sat 11.0%) and to the afternoon; the busiest slot is Tue 14:00. The week splits best into 3 segments: T1 (about 08:00–00:00, 95.8% of orders) plus two night segments.
+   - The pattern is very stable: r = 0.94–0.98 between periods, 0.98 between odd and even weeks, and still 1.00 without the spike weeks.
+   - By contrast, order value and installments barely depend on the slot (epsilon² 0.0023 and 0.0049), and their weekday × hour patterns do not repeat between periods (r ≤ 0.22 and ≤ 0.36).
 
 <a id="recommendations"></a>
 
 ### Recommendations
 
 1. **Push the categories with stable, repeated demand harder in recommendations.**
-   - Supported for bedding: `bed_bath_table` has the most stable weekly volume in 2018 (coefficient of variation 0.175, lowest of all large categories) and a repeat rate of 2.9% vs 2.2% overall; `furniture_decor` (2.9%) and `sports_leisure` (2.8%) repeat at a similar rate.
-   - Not supported for electronics: `electronics` repeats at 1.4% (among the lowest) with a weekly CV of 0.365; `computers_accessories` 1.7%, `telephony` 2.1%.
-2. **Target customers by region with freight-aware recommendations (weight, distance, value).**
-   - Supported premises: the freight share falls as product value rises (Spearman ρ −0.78 across shipments); freight grows with distance in every weight tier, with a fixed part (R$ 11.7 + R$ 0.60 per 100 km for items < 0.5 kg); a random forest freight model explains 73% of freight variance (median error R$ 1.57).
-   - Correction: a freight share below 20% is not the typical case — 44.7% of shipments are at or below 20% (median 22%; 34.6% for items < 0.5 kg).
-   - Not confirmed by the simulation: within a category, states facing a higher predicted freight share do not buy measurably less of it (slope −0.07, 95% CI −0.33 to +0.15), and freight share overlaps almost fully with region, so regional taste cannot be separated from freight. Capping every category × state at a 20% freight share gives +1.7% shipments overall (95% CI −3.4% to +8.6%), +5–6% in the North and Northeast with wide intervals. An A/B test with exposure (impression and click) data is needed to test this recommendation.
-
-   Charts: `random_forest/charts/sim_*.png`; tables: `random_forest/outputs/sim_*.csv`.
-3. **Time pushes to the golden slots.** *(Based on when purchases happen, not on why.)*
+   - Categories with stable purchase intent: `bed_bath_table` has the most stable weekly volume in 2018 (coefficient of variation 0.175, lowest of all large categories) and a repeat rate of 2.9% vs 2.2% overall; `furniture_decor` (2.9%) and `sports_leisure` (2.8%) repeat at a similar rate.
+2. **Time pushes to the golden slots.** *(Based on when purchases happen, not on why.)*
 
    | Priority | Slots | Evidence |
    |---|---|---|
@@ -214,10 +213,10 @@ These are the project author's inferences, drawn from the observed patterns in [
    | 🥈 Secondary | Weekdays 10–17h around the primary slots; Mon and Tue 19–22h (26 candidate slots) | Top quarter in 50–90% of bootstraps; R$ 1.69K–1.86K per slot per week |
    | ⬇️ Low | 01–07h (T2 and T3); Saturday and Sunday daytime | Night segments hold 4.3% of orders; median weekend slot R$ 1.16K–1.20K per week vs R$ 1.73K on Monday. Within the weekend, Sunday 18–22h is the busiest stretch (864–956 orders per hour) |
 
-   - Aim these pushes at **order volume, not basket size**: golden slots differ from other T1 slots mostly in orders (11.7 vs 8.8 per week), much less in order value (R$ 167 vs R$ 160), and revenue per slot follows volume (ρ = 0.98) more than order value (ρ = 0.53).
+   - Aim these pushes at **order volume, not basket size**: golden slots differ from other T1 slots mainly in orders (11.7 vs 8.8 per week) and only slightly in order value (R$ 167 vs R$ 160); revenue per slot follows volume (ρ = 0.98) more than order value (ρ = 0.53).
    - Do not schedule price or installment offers by hour: the order-value and installment patterns by slot do not repeat between periods.
-   - Treat the primary and secondary slots as one band: the Mon–Wed 14–16h core is stable, but single-slot boundaries shift (odd- vs even-week golden sets overlap with Jaccard 0.44).
-   - Limits: historical purchase time is not the same as response to a push; timestamps are used as stored in the data. An A/B test of send times is needed to confirm the lift.
+   - Use the primary and secondary slots as one band: the Mon–Wed 14–16h core is stable, but single-slot boundaries shift (the golden sets from odd and even weeks overlap with a Jaccard of only 0.44).
+   - Limits: historical purchase time is not the same as response to a push, and timestamps are used as stored in the data; the real effect still has to be confirmed with an A/B test of send times.
 
    Charts: `time_matrix/charts/11_t1_price_volume.png`, `12_t1_revenue_matrix.png`; tables: `time_matrix/outputs/golden_cells.csv`, `golden_summary.csv`.
 
