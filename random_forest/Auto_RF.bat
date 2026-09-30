@@ -1,7 +1,7 @@
 @echo off
 REM Random forest segmentation: features -> seller / customer segments -> pairing overlap
 REM -> activity cut-off -> active customer segments -> active vs one-time review / spend
-REM -> active vs one-time geography
+REM -> active vs one-time geography -> freight ratio simulation
 REM Requires DB\olist.duckdb (run ETL_scripts\Auto_ETL.bat first).
 setlocal
 
@@ -18,6 +18,7 @@ for %%S in (
     05_active_segments.py
     06_active_vs_one_time.py
     07_activity_geography.py
+    08_freight_simulation.py
 ) do (
     echo.
     echo ---- Running %%S ----

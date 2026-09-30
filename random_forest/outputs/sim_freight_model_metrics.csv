@@ -1,0 +1,2 @@
+train_shipments,test_shipments,r2_freight,r2_log_freight,mae_brl,median_abs_error_brl
+79216,19812,0.7305841264189596,0.7511555894983658,4.160504112917357,1.569418966101006
