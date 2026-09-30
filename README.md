@@ -75,5 +75,9 @@ random_forest\Auto_RF.bat
 | 01 | `01_build_features.py` | One feature row per seller (location, category mix, product size, diversity, sales, service) and per customer (location, category mix, order value, frequency, payment, experience) |
 | 02 | `02_cluster.py` | Unsupervised random forest (real vs column-shuffled synthetic data) → leaf proximity → Ward clustering, k chosen by silhouette; a supervised forest explains the segments |
 | 03 | `03_overlap.py` | Every seller × customer segment pair via shipments: share, lift, standardized residual, Cramér's V |
+| 04 | `04_activity_cutoff.py` | Purchase count = distinct purchase days with any seller; active = purchases on ≥ 2 dates (platform re-use), with a two-component geometric mixture as a statistical reference; active vs one-time compared with Cliff's delta |
+| 05 | `05_active_segments.py` | Active customers segmented with repeat-behaviour features, compared with same-size random samples of one-time customers |
+| 06 | `06_active_vs_one_time.py` | Review score and spend per purchase occasion: one-time vs active customers' first and later purchases (Wilson / bootstrap intervals, Cliff's delta) |
+| 07 | `07_activity_geography.py` | State and region distribution of active vs one-time customers: shares, active rate with Wilson intervals, chi-square and Cramér's V |
 
 Outputs: `random_forest/features/`, `random_forest/outputs/`, `random_forest/charts/`.

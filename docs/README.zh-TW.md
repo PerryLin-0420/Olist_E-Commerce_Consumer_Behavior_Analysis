@@ -75,5 +75,9 @@ random_forest\Auto_RF.bat
 | 01 | `01_build_features.py` | 每家店家一列特徵（位置、品類組成、商品大小、多樣性、銷售、服務），每位顧客一列特徵（位置、品類組成、訂單金額、頻率、付款、購物體驗） |
 | 02 | `02_cluster.py` | 非監督式 RF（真實資料 vs 各欄獨立打亂的合成資料）→ 葉節點相似度 → Ward 階層式分群，群數依輪廓係數挑選；再以監督式 RF 解釋各群差異 |
 | 03 | `03_overlap.py` | 以出貨紀錄窮舉每一組店家群 × 顧客群：占比、lift、標準化殘差、Cramér's V |
+| 04 | `04_activity_cutoff.py` | 購買次數 = 跨所有店家的不同購買日數；活躍 = 在 ≥ 2 個不同日期下單（重複使用平台），並以兩成分幾何混合模型作為統計參考；以 Cliff's delta 比較活躍與一次型顧客 |
+| 05 | `05_active_segments.py` | 加入回購行為特徵對活躍顧客分群，並與同樣人數的隨機一次型顧客比較 |
+| 06 | `06_active_vs_one_time.py` | 以購買場次比較評分與消費額：一次型 vs 活躍顧客的首次與後續購買（Wilson／bootstrap 信賴區間、Cliff's delta） |
+| 07 | `07_activity_geography.py` | 活躍與一次型顧客的州與區域分布：占比、活躍率（Wilson 信賴區間）、卡方檢定與 Cramér's V |
 
 輸出：`random_forest/features/`、`random_forest/outputs/`、`random_forest/charts/`。

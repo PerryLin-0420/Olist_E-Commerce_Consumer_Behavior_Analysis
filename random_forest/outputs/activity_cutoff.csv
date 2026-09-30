@@ -1,0 +1,2 @@
+w_one_time,p_one_time,w_repeat,p_repeat,p_single,loglik_mixture,loglik_single,likelihood_ratio,posterior_threshold,cutoff_purchase_days,mixture_cutoff_purchase_days,one_time_customers,active_customers,multi_order_same_day_customers
+0.9905468771109658,0.018542895543286093,0.009453122889034216,0.3619097216362726,0.02351018226302209,-10632.521267942553,-10836.888558069573,408.73458025404034,0.5,2,3,92925,2065,823
