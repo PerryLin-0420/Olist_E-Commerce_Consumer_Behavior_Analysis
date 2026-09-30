@@ -178,26 +178,73 @@ These are my personal views, inferred from the patterns observed in [EDA Finding
    - 97.8% of customers bought on a single date only; a two-component mixture puts 99.05% of customers at a 1.9% chance of buying again.
    - Even customers acquired in the Black Friday spike weeks repurchase within 180 days at only 1.70%, no different from other weeks (2.02%, p = 0.13). The big promotion did not bring in customers who come back more.
    - Active customers do not form distinct segments either: their random forest segmentation is even weaker than that of same-size random samples of one-time customers.
+
+   📊 *Evidence:*
+
+   <img src="random_forest/charts/activity_purchase_distribution.png" alt="activity_purchase_distribution" width="760">
+   <img src="EDA/charts/22_cohort_repurchase_by_week.png" alt="22_cohort_repurchase_by_week" width="760">
+   <img src="random_forest/charts/active_customer_vs_baseline.png" alt="active_customer_vs_baseline" width="760">
+
 2. **Platform stickiness is extremely low.**
    - Only 2.2% of customers reach a second purchase date; returning customers are just 2.2% of weekly customers, spike weeks included.
    - In 63% of seller × category pairs (sellers with ≥ 30 customers in the category), not a single customer came back.
+
+   📊 *Evidence:*
+
+   <img src="EDA/charts/26_purchase_funnel.png" alt="26_purchase_funnel" width="760">
+   <img src="EDA/charts/05_seller_repeat_rate_iqr_by_category.png" alt="05_seller_repeat_rate_iqr_by_category" width="760">
+
 3. **Revenue rests almost entirely on new customers, so if acquisition slows, volume and revenue risk a sharp fall.**
    - Weekly orders grew from 853 (2017) to 1,571 (Jan–Aug 2018), but had already flattened within 2018 (trend −4.4 orders/week, p = 0.37); weekly new customers were flat too (~1,516, p = 0.38).
    - The largest spike (Black Friday week) was 2.3× the rolling baseline and 1.9× the 2018 weekly mean, yet order value did not rise in spike weeks (mean R$ 155 vs R$ 161): spikes bring volume, not value per order.
    - With 97.8% one-time buyers, there is no retained base to hold revenue up when new customers drop off.
    - Limits: the data is a public sample of the marketplace ending in August 2018, with no market-size, demographic or acquisition-cost data. The 2018 trend is a plateau, not yet a measured decline, and whether the demographic dividend has faded cannot be measured from this data.
+
+   📊 *Evidence:*
+
+   <img src="EDA/charts/21_weekly_purchases_by_category.png" alt="21_weekly_purchases_by_category" width="760">
+   <img src="EDA/charts/25_weekly_price_volume.png" alt="25_weekly_price_volume" width="760">
+
 4. **Heavy goods do not concentrate among nearby buyers.**
    - Shipments ≥ 10 kg within 100 km are only ×0.96 the overall share (not over-represented); heavy goods concentrate at 100–300 km (×1.30), and what actually leans toward short distances is items < 0.5 kg (×1.19).
+
+   📊 *Evidence:*
+
+   <img src="random_forest/charts/sim_weight_distance_mix.png" alt="sim_weight_distance_mix" width="760">
+
 5. **Target customers by region with freight-aware recommendations (weight, distance, value).**
    - The premises are backed by data: the freight share falls as product value rises (Spearman ρ −0.78 across shipments); freight grows with distance in every weight tier and has a fixed part (R$ 11.7 + R$ 0.60 per 100 km for items < 0.5 kg); a random forest freight model explains 73% of freight variance (median error R$ 1.57), so freight can be estimated in advance.
    - What needs correcting: a freight share below 20% is not the typical case — only 44.7% of shipments are at or below 20% (median 22%; 34.6% for items < 0.5 kg).
    - Simulation: within a category, states facing a higher predicted freight share do not buy measurably less of it (slope −0.07, 95% CI −0.33 to +0.15). Capping every category × state at a 20% freight share gives +1.7% shipments overall (95% CI −3.4% to +8.6%), and +5–6% in the North and Northeast, with wide intervals.
-   - Charts: `random_forest/charts/sim_*.png`; tables: `random_forest/outputs/sim_*.csv`.
+   - Tables: `random_forest/outputs/sim_*.csv`.
    - **This inference cannot be verified at this point.** Freight share overlaps almost fully with region, so regional taste cannot be separated from freight, and the data has no impression or click records. Whether freight-aware recommendations work can only be confirmed with an A/B test.
+
+   📊 *Evidence (premises):*
+
+   <img src="EDA/charts/29_category_value_vs_freight_ratio.png" alt="29_category_value_vs_freight_ratio" width="760">
+   <img src="EDA/charts/30_freight_vs_distance_by_weight.png" alt="30_freight_vs_distance_by_weight" width="760">
+   <img src="random_forest/charts/sim_freight_model.png" alt="sim_freight_model" width="760">
+
+   <details>
+   <summary>🧪 Simulation / verification charts (click to expand)</summary>
+
+   <img src="random_forest/charts/sim_freight_ratio_tolerance.png" alt="sim_freight_ratio_tolerance" width="760">
+   <img src="random_forest/charts/sim_category_state_association.png" alt="sim_category_state_association" width="760">
+   <img src="random_forest/charts/sim_scenario.png" alt="sim_scenario" width="760">
+
+   </details>
+
 6. **Buying follows a fixed weekly rhythm; the time slot decides how many people buy, not how much they spend.** *(Phenomenon only; I do not infer why buyers choose these hours.)*
    - Orders lean to the start of the week (Mon 16.3% → Sat 11.0%) and to the afternoon; the busiest slot is Tue 14:00. The week splits best into 3 segments: T1 (about 08:00–00:00, 95.8% of orders) plus two night segments.
    - The pattern is very stable: r = 0.94–0.98 between periods, 0.98 between odd and even weeks, and still 1.00 without the spike weeks.
    - By contrast, order value and installments barely depend on the slot (epsilon² 0.0023 and 0.0049), and their weekday × hour patterns do not repeat between periods (r ≤ 0.22 and ≤ 0.36).
+
+   📊 *Evidence:*
+
+   <img src="time_matrix/charts/01_orders_matrix.png" alt="01_orders_matrix" width="760">
+   <img src="time_matrix/charts/05_cluster_map.png" alt="05_cluster_map" width="760">
+   <img src="time_matrix/charts/10_period_matrices.png" alt="10_period_matrices" width="760">
+   <img src="time_matrix/charts/08_time_effect_sizes.png" alt="08_time_effect_sizes" width="760">
 
 <a id="recommendations"></a>
 
@@ -205,6 +252,12 @@ These are my personal views, inferred from the patterns observed in [EDA Finding
 
 1. **Push the categories with stable, repeated demand harder in recommendations.**
    - Categories with stable purchase intent: `bed_bath_table` has the most stable weekly volume in 2018 (coefficient of variation 0.175, lowest of all large categories) and a repeat rate of 2.9% vs 2.2% overall; `furniture_decor` (2.9%) and `sports_leisure` (2.8%) repeat at a similar rate.
+
+   📊 *Evidence:*
+
+   <img src="EDA/charts/21_weekly_purchases_by_category.png" alt="21_weekly_purchases_by_category" width="760">
+   <img src="EDA/charts/28_repeat_category_by_purchase.png" alt="28_repeat_category_by_purchase" width="760">
+
 2. **Time pushes to the golden slots.** *(Based on when purchases happen, not on why.)*
 
    | Priority | Slots | Evidence |
@@ -218,6 +271,11 @@ These are my personal views, inferred from the patterns observed in [EDA Finding
    - Use the primary and secondary slots as one band: the Mon–Wed 14–16h core is stable, but single-slot boundaries shift (the golden sets from odd and even weeks overlap with a Jaccard of only 0.44).
    - Limits: historical purchase time is not the same as response to a push, and timestamps are used as stored in the data; the real effect still has to be confirmed with an A/B test of send times.
 
-   Charts: `time_matrix/charts/11_t1_price_volume.png`, `12_t1_revenue_matrix.png`; tables: `time_matrix/outputs/golden_cells.csv`, `golden_summary.csv`.
+   📊 *Evidence:*
+
+   <img src="time_matrix/charts/11_t1_price_volume.png" alt="11_t1_price_volume" width="760">
+   <img src="time_matrix/charts/12_t1_revenue_matrix.png" alt="12_t1_revenue_matrix" width="760">
+
+   Tables: `time_matrix/outputs/golden_cells.csv`, `golden_summary.csv`.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

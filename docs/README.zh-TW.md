@@ -178,26 +178,72 @@ time_matrix\Auto_TM.bat
    - 97.8% 的顧客只在單一日期買過；用兩成分混合模型來看，99.05% 的顧客再買一次的機率只有 1.9%。
    - 就算是黑色星期五高峰週進來的新客，180 天內回購率也只有 1.70%，和其他週（2.02%）沒有差別（p = 0.13），大促銷並沒有換來比較會回來的顧客。
    - 活躍顧客也沒有形成明確的族群：他們的隨機森林分群品質，甚至比同樣人數、隨機抽出的一次型顧客還差。
+
+   📊 *佐證圖表：*
+
+   <img src="../random_forest/charts/activity_purchase_distribution.png" alt="activity_purchase_distribution" width="760">
+   <img src="../EDA/charts/22_cohort_repurchase_by_week.png" alt="22_cohort_repurchase_by_week" width="760">
+   <img src="../random_forest/charts/active_customer_vs_baseline.png" alt="active_customer_vs_baseline" width="760">
+
 2. **平台黏著度極低。**
    - 只有 2.2% 的顧客會走到第二個購買日；每週顧客裡的回頭客也只占 2.2%，高峰週一樣。
    - 在「店家 × 品類」組合中（該品類有 ≥ 30 位顧客的店家），有 63% 連一位回頭客都沒有。
+
+   📊 *佐證圖表：*
+
+   <img src="../EDA/charts/26_purchase_funnel.png" alt="26_purchase_funnel" width="760">
+   <img src="../EDA/charts/05_seller_repeat_rate_iqr_by_category.png" alt="05_seller_repeat_rate_iqr_by_category" width="760">
+
 3. **營收幾乎完全靠新客撐著，新客一旦放緩，購買量與營收都有斷崖式下跌的風險。**
    - 每週訂單從 2017 年平均 853 筆成長到 2018 年 1–8 月的 1,571 筆，但 2018 年內已經走平（趨勢 −4.4 筆/週，p = 0.37），每週新客也同樣持平（約 1,516 位，p = 0.38）。
    - 最大的高峰（黑色星期五那週）是滾動基準的 2.3 倍、2018 年週均的 1.9 倍，但高峰週的訂單金額沒有變高（平均 R$ 155 vs R$ 161）：高峰帶來的是量，不是單價。
    - 97.8% 都是一次型顧客，等於沒有留存客群能在新客變少時接住營收。
    - 限制：這份資料是平台的公開樣本，只到 2018 年 8 月，也沒有市場規模、人口或獲客成本資料。2018 年的走勢目前是「持平」，還不是測得到的「下滑」；人口紅利是否已經退去，這份資料沒辦法衡量。
+
+   📊 *佐證圖表：*
+
+   <img src="../EDA/charts/21_weekly_purchases_by_category.png" alt="21_weekly_purchases_by_category" width="760">
+   <img src="../EDA/charts/25_weekly_price_volume.png" alt="25_weekly_price_volume" width="760">
+
 4. **重物並沒有集中在近距離的顧客。**
    - ≥ 10 kg 的出貨在 100 km 內的占比只有整體的 ×0.96（沒有偏多）；重物反而集中在 100–300 km（×1.30），真正偏向近距離的是 < 0.5 kg 的輕件（×1.19）。
+
+   📊 *佐證圖表：*
+
+   <img src="../random_forest/charts/sim_weight_distance_mix.png" alt="sim_weight_distance_mix" width="760">
+
 5. **依地區、以運費（重量、距離、商品價值）為考量做針對性推薦。**
    - 前提有數據支持：商品價值越高，運費占比越低（以出貨計 Spearman ρ −0.78）；每個重量層的運費都隨距離上升，而且有一段固定成本（< 0.5 kg 為 R$ 11.7 + 每 100 km R$ 0.60）；隨機森林運費模型能解釋 73% 的運費變異（誤差中位數 R$ 1.57），代表運費可以事先估出來。
    - 需要修正的地方：運費占比低於 20% 並不是常態，只有 44.7% 的出貨在 20% 以下（中位數 22%；< 0.5 kg 的輕件只有 34.6%）。
    - 模擬結果：同一品類中，預估運費占比較高的州，購買占比並沒有明顯比較低（斜率 −0.07，95% 信賴區間 −0.33 到 +0.15）；把每個品類 × 州的運費占比壓到 20%，模擬出貨量整體 +1.7%（95% 信賴區間 −3.4% 到 +8.6%），北部與東北部 +5–6%，但區間很寬。
-   - 圖表：`random_forest/charts/sim_*.png`；統計表：`random_forest/outputs/sim_*.csv`。
    - **這項推論目前無法驗證。** 運費占比幾乎和區域完全重疊，區域本身的偏好沒辦法跟運費拆開，資料裡也沒有曝光與點擊紀錄；運費導向的推薦到底有沒有效，只能靠 A/B 測試確認。
+
+   📊 *佐證圖表（前提）：*
+
+   <img src="../EDA/charts/29_category_value_vs_freight_ratio.png" alt="29_category_value_vs_freight_ratio" width="760">
+   <img src="../EDA/charts/30_freight_vs_distance_by_weight.png" alt="30_freight_vs_distance_by_weight" width="760">
+   <img src="../random_forest/charts/sim_freight_model.png" alt="sim_freight_model" width="760">
+
+   <details>
+   <summary>🧪 模擬／驗證圖表（點擊展開）</summary>
+
+   <img src="../random_forest/charts/sim_freight_ratio_tolerance.png" alt="sim_freight_ratio_tolerance" width="760">
+   <img src="../random_forest/charts/sim_category_state_association.png" alt="sim_category_state_association" width="760">
+   <img src="../random_forest/charts/sim_scenario.png" alt="sim_scenario" width="760">
+
+   </details>
+
 6. **購買有固定的每週節奏；時段決定的是「多少人買」，不是「買多少錢」。** *（這裡只談現象，我不推論顧客為什麼在這些時段購買。）*
    - 訂單偏向週初（週一 16.3% → 週六 11.0%）和下午，最忙的時段是週二 14:00。整週最適合切成 3 群：T1（約 08:00–00:00，占 95.8% 訂單）加上兩個夜間群。
    - 這個樣態非常穩：各時期之間 r = 0.94–0.98，奇偶週之間 0.98，拿掉高峰週也是 1.00。
    - 反過來看，訂單金額與分期幾乎不受時段影響（epsilon² 0.0023 與 0.0049），它們的星期 × 小時樣態在不同時期之間也不會重現（r ≤ 0.22 與 ≤ 0.36）。
+
+   📊 *佐證圖表：*
+
+   <img src="../time_matrix/charts/01_orders_matrix.png" alt="01_orders_matrix" width="760">
+   <img src="../time_matrix/charts/05_cluster_map.png" alt="05_cluster_map" width="760">
+   <img src="../time_matrix/charts/10_period_matrices.png" alt="10_period_matrices" width="760">
+   <img src="../time_matrix/charts/08_time_effect_sizes.png" alt="08_time_effect_sizes" width="760">
 
 <a id="recommendations"></a>
 
@@ -205,6 +251,12 @@ time_matrix\Auto_TM.bat
 
 1. **對需求穩定、會重複購買的品類，加重推薦與推送的力道。**
    - 穩定購買意願品項：`bed_bath_table` 在 2018 年的每週量最穩定（變異係數 0.175，大型品類中最低），回購率 2.9%，高於整體的 2.2%；`furniture_decor`（2.9%）與 `sports_leisure`（2.8%）的回購率也很接近。
+
+   📊 *佐證圖表：*
+
+   <img src="../EDA/charts/21_weekly_purchases_by_category.png" alt="21_weekly_purchases_by_category" width="760">
+   <img src="../EDA/charts/28_repeat_category_by_purchase.png" alt="28_repeat_category_by_purchase" width="760">
+
 2. **推送時間對準黃金時段。** *（依據的是「什麼時候買」，不推論「為什麼買」。）*
 
    | 優先度 | 時段 | 依據 |
@@ -218,6 +270,11 @@ time_matrix\Auto_TM.bat
    - 主要與次要時段要當成一整段來用：週一至週三 14–16 點的核心很穩，但單一時段的邊界會移動（奇數週與偶數週各自找出的黃金時段，Jaccard 重疊只有 0.44）。
    - 限制：歷史購買時間不等於對推送的反應，時間戳記也是照資料原樣使用；實際成效還是要靠推送時間的 A/B 測試確認。
 
-   圖表：`time_matrix/charts/11_t1_price_volume.png`、`12_t1_revenue_matrix.png`；統計表：`time_matrix/outputs/golden_cells.csv`、`golden_summary.csv`。
+   📊 *佐證圖表：*
+
+   <img src="../time_matrix/charts/11_t1_price_volume.png" alt="11_t1_price_volume" width="760">
+   <img src="../time_matrix/charts/12_t1_revenue_matrix.png" alt="12_t1_revenue_matrix" width="760">
+
+   統計表：`time_matrix/outputs/golden_cells.csv`、`golden_summary.csv`。
 
 <p align="right"><a href="#top">↑ 回到頂端</a></p>
