@@ -4,6 +4,10 @@
 
 It's an analysis about consumer behavior on Olist store. Especially modeling the consumer behavior to predict consume trends.
 
+## Documents
+
+- [EDA Findings](EDA/EDA_findings.md): observed patterns from the exploratory analysis (phenomena only, no causal claims)
+
 ## ETL: Raw_data → DuckDB
 
 Loads the 9 Olist CSV files in `Raw_data/` into `DB/olist.duckdb`.

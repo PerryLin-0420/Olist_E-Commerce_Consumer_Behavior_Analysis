@@ -223,3 +223,6 @@ __marimo__/
 # ETL outputs (DB is rebuilt locally by ETL_scripts/Auto_ETL.bat)
 DB/
 ETL_scripts/logs/
+
+# EDA chart temp files (written then swapped in by eda_utils.save)
+EDA/charts/*.tmp.png

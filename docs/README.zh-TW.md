@@ -4,6 +4,10 @@
 
 本專案分析 Olist 電商平台的消費者行為，重點在於建立消費者行為模型以預測消費趨勢。
 
+## 文件 (Documents)
+
+- [EDA 發現](EDA_findings.zh-TW.md)：探索式分析觀察到的現象（只描述現象，不推論因果）
+
 ## ETL：Raw_data → DuckDB
 
 將 `Raw_data/` 的 9 個 Olist CSV 載入 `DB/olist.duckdb`。

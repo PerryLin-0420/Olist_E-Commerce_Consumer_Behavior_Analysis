@@ -1,8 +1,11 @@
 """Shared helpers for EDA scripts: DB access, chart style and output paths."""
+import os
+import time
 from pathlib import Path
 
 import duckdb
 import matplotlib
+import numpy as np
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
@@ -42,6 +45,7 @@ RADIUS_PX = 4   # rounded data-end radius
 plt.rcParams.update({
     "font.family": ["Segoe UI", "DejaVu Sans"],
     "font.size": 9,
+    "text.parse_math": False,  # "R$ 67 → R$ 100" must not be read as mathtext
     "text.color": INK,
     "axes.labelcolor": INK_2,
     "xtick.color": MUTED,
@@ -224,6 +228,75 @@ def legend(fig, names, colors, y_px_from_top=None, ncol=None, left=None):
                handleheight=1.0, columnspacing=1.4, borderaxespad=0, labelcolor=INK_2)
 
 
+BOX_FILL = BLUE_RAMP[0]
+MEDIAN_DASH = (0, (4, 2))
+BOX_PX = 16  # box thickness per row
+WHISKER_NOTE = "whiskers = 1.5 × IQR, outliers not drawn"
+
+
+def box_rows(ax, labels, datasets, show_mean=True, xmax=None) -> list[dict]:
+    """Horizontal box plots, one row per label (first on top).
+
+    Box = Q1-Q3, dashed line = median, whiskers = most extreme data within
+    1.5 x IQR (Tukey), diamond = mean. Outliers are not drawn: each row holds
+    thousands of points and the fliers would merge into a solid band.
+    Returns the matplotlib boxplot stats (q1, med, q3, whislo, whishi, mean).
+    """
+    from matplotlib import cbook
+    stats = [cbook.boxplot_stats(np.asarray(d, dtype=float), whis=1.5)[0] for d in datasets]
+    n = len(labels)
+    xmax = xmax or max(max(s["whishi"] for s in stats),
+                       max(s["mean"] for s in stats) if show_mean else 0) * 1.05
+    ax.set_xlim(0, xmax)
+    ax.set_ylim(n - 0.5, -0.5)
+    _, sy = _px_to_data(ax)
+    hair = 1 * 72 / DPI
+    ax.bxp(stats, positions=range(n), widths=BOX_PX * sy, orientation="horizontal",
+           patch_artist=True, showfliers=False, showmeans=show_mean, manage_ticks=False,
+           boxprops={"facecolor": BOX_FILL, "edgecolor": SERIES[0], "linewidth": hair},
+           medianprops={"color": INK, "linewidth": 2 * 72 / DPI, "linestyle": MEDIAN_DASH},
+           whiskerprops={"color": SERIES[0], "linewidth": hair},
+           capprops={"color": SERIES[0], "linewidth": hair},
+           capwidths=BOX_PX * sy * 0.5,
+           meanprops={"marker": "D", "markersize": 7 * 72 / DPI + 2,
+                      "markerfacecolor": SERIES[1], "markeredgecolor": SURFACE,
+                      "markeredgewidth": 2 * 72 / DPI, "zorder": 4})
+    ax.set_ylim(n - 0.5, -0.5)
+    ax.set_yticks(range(n), labels)
+    return stats
+
+
+def box_legend(fig, left, y_px_from_top, with_mean=True):
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+    handles = [Patch(facecolor=BOX_FILL, edgecolor=SERIES[0], label="Q1–Q3 box"),
+               Line2D([], [], color=INK, linestyle=MEDIAN_DASH, linewidth=1.5, label="Median"),
+               Line2D([], [], color=SERIES[0], linewidth=1, label="Whiskers 1.5×IQR")]
+    if with_mean:
+        handles.append(Line2D([], [], marker="D", color=SERIES[1], linestyle="none",
+                              markersize=5, label="Mean"))
+    y = 1 - y_px_from_top / (fig.get_figheight() * DPI)
+    fig.legend(handles=handles, loc="upper left", frameon=False, ncol=len(handles), fontsize=8.5,
+               labelcolor=INK_2, bbox_to_anchor=(left, y), borderaxespad=0, handlelength=2.2,
+               columnspacing=1.2)
+
+
+def side_table(fig, ax, df, columns, x_positions, header_px_from_top, bold_last=False):
+    """Right-aligned numeric columns aligned to the axes rows; columns = [(title, col, fmt)]."""
+    height_px = fig.get_figheight() * DPI
+    header_y = 1 - header_px_from_top / height_px
+    n = len(df)
+    for (title, col, fmt), x in zip(columns, x_positions):
+        fig.text(x, header_y, title, ha="right", va="bottom", fontsize=8.5, color=MUTED)
+        for i, value in enumerate(df[col]):
+            y_disp = ax.transData.transform((0, i))[1]
+            y_fig = fig.transFigure.inverted().transform((0, y_disp))[1]
+            last = bold_last and i == n - 1
+            text = fmt(value) if callable(fmt) else fmt.format(value)
+            fig.text(x, y_fig, text, ha="right", va="center", fontsize=8.5,
+                     color=INK if last else INK_2, fontweight="semibold" if last else "normal")
+
+
 def fmt_brl(value: float) -> str:
     """Compact currency: R$ 950, R$ 12.9K, R$ 4.2M."""
     if abs(value) >= 1e6:
@@ -265,11 +338,25 @@ def fmt_pct(rate_pct: float) -> str:
     return f"{rate_pct:.1f}%"
 
 
+def _replace_with_retry(tmp: Path, path: Path, attempts: int = 5) -> None:
+    """Swap tmp into path; retry while another process (viewer, AV scan) holds the file."""
+    for attempt in range(attempts):
+        try:
+            os.replace(tmp, path)
+            return
+        except OSError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(0.5 * (attempt + 1))
+
+
 def save(fig, name: str) -> Path:
     CHART_DIR.mkdir(parents=True, exist_ok=True)
     path = CHART_DIR / f"{name}.png"
-    fig.savefig(path, dpi=DPI)
+    tmp = path.with_suffix(".tmp.png")
+    fig.savefig(tmp, dpi=DPI)
     plt.close(fig)
+    _replace_with_retry(tmp, path)
     print(f"saved {path.relative_to(PROJECT_DIR)}")
     return path
 
