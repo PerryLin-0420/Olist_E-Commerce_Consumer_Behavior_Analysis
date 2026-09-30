@@ -5,7 +5,7 @@
 本文件描述**資料呈現的現象**，只陳述觀察到的樣態，不推論成因；「為什麼」留待後續假設檢定。
 
 - 資料來源：由 `ETL_scripts/Auto_ETL.bat` 建立的 `DB/olist.duckdb`
-- 腳本：`EDA/scipts/01_*.py` – `05_*.py`；圖表在 `EDA/charts/`，統計表在 `EDA/outputs/`
+- 腳本：`EDA/scipts/01_*.py` – `08_*.py` 與 `random_forest/scripts/04_*.py` – `07_*.py`；圖表在 `EDA/charts/` 與 `random_forest/charts/`，統計表在對應的 `outputs/` 資料夾
 - 期間：2016-09-04 至 2018-10-17（2016 Q3/Q4 與 2018 Q3/Q4 為不完整季度）
 
 ## 名詞定義 (Definitions)
@@ -90,7 +90,7 @@
 ### 3.1 店家層級的回購率
 ![Seller repeat rate](../EDA/charts/05_seller_repeat_rate_iqr_by_category.png)
 
-- 以顧客來看，97.0% 的購買顧客只有一筆有效訂單。
+- 以顧客來看，97.0% 的購買顧客只有一筆有效訂單（若把同一天的訂單合併為一次購買，則為 97.8%，見 5.1）。
 - 以店家 × 品類來看（該品類客戶 ≥ 30 位的店家，共 635 組）：63% 的店家完全沒有回頭客；整體 Q1 = 0%、中位數 = 0%、Q3 = 1.1%。
 - 只有 3 個品類的中位數高於 0%：`construction_tools_construction` 1.35%、`bed_bath_table` 0.41%、`fashion_bags_accessories` 0.31%；其中 `fashion_bags_accessories` 分布最寬（Q3 4.33%）。
 
@@ -132,3 +132,92 @@
 
 - 每筆訂單付款金額中位數：北部 R$ 142、東北部 R$ 130、中西部 R$ 114、南部 R$ 108、東南部 R$ 100。
 - 各區每位顧客的訂單數相近（1.027–1.035），因此各區每位顧客消費額的排名與單筆訂單金額的排名一致。
+
+## 5. 顧客活躍度 (Customer Activity)
+
+腳本：`random_forest/scripts/04_*.py` – `07_*.py`；圖表在 `random_forest/charts/`。
+
+### 5.1 購買次數與活躍切分點
+![Purchase distribution](../random_forest/charts/activity_purchase_distribution.png)
+
+- 購買次數 = 每位顧客的不同購買日期數（不限店家）。2,888 位多訂單顧客中，823 位的所有訂單都在同一天；相鄰訂單間隔有四分之一不到 7 分鐘。
+- 活躍 = 在 ≥ 2 個日期購買：2,065 位（2.17%）；一次型：92,925 位。
+- 兩成分幾何混合模型的擬合遠優於單一幾何分布（概似比 409）：99.05% 的顧客再次購買機率為 1.9%，0.95% 為 36.2%。
+
+### 5.2 活躍 vs 一次型顧客
+![Effect sizes](../random_forest/charts/activity_effect_sizes.png)
+![Review](../random_forest/charts/active_vs_one_time_review.png)
+![Spend](../random_forest/charts/active_vs_one_time_spend.png)
+
+- 大差異只出現在隨購買次數增加的特徵（訂單數、店家數、品類數、總消費）；其餘特徵差異皆可忽略（|Cliff's δ| ≤ 0.13）：訂單金額、商品單價、運費比例、距離、配送天數、品類組成、付款方式、評分。
+- 5 星占比：一次型 58.1%、活躍顧客首次購買 63.0%、後續購買 65.7%（Cliff's δ 0.05–0.08）。
+- 每次購買消費額中位數：一次型 R$ 106，活躍顧客首次與後續購買皆為 R$ 107。
+- 以隨機森林對活躍顧客分群，4 項品質指標全部低於同樣人數的隨機一次型顧客樣本。
+
+### 5.3 地理分布
+![Activity geography](../random_forest/charts/activity_geography_map.png)
+
+- 活躍與一次型顧客的州占比相關係數 0.9988；州 × 層級卡方 p = 0.093，Cramér's V = 0.019。
+- 各區活躍率：東南部 2.30%、南部 2.06%、中西部 1.98%、北部 1.80%、東北部 1.63%（區域 × 層級 p = 0.0005，Cramér's V = 0.015）。
+
+## 6. 購買的時間序列 (Purchases Over Time)
+
+### 6.1 每週購買量
+![Weekly purchases](../EDA/charts/21_weekly_purchases_by_category.png)
+![All categories](../EDA/charts/24_weekly_orders_all_categories.png)
+
+- 每週訂單數平均：2017 年 853 筆，2018 年 1–8 月 1,571 筆。
+- 兩個高峰週（相對以該週為中心的 9 週滾動中位數，穩健 z ≥ 3）：2017-11-20 那週 2,972 筆（×2.3）、2017-11-27 那週 2,077 筆（×1.6）；次高的週 z = 2.6。
+- 2017-11-20 那週的 2,931 位顧客中有 2,881 位是新客；整段期間回頭客占每週顧客的 2.2%。
+- 74 個品類中有 38 個在高峰週達到自身滾動基準的 1.5 倍以上。
+
+### 6.2 價與量
+![Price and volume](../EDA/charts/25_weekly_price_volume.png)
+
+- 平均訂單金額：高峰週 R$ 155、其他週 R$ 161；中位數 R$ 103 vs R$ 104。
+- 每週訂單數與每週平均訂單金額的 Spearman ρ：−0.07。
+
+### 6.3 高峰週的首購顧客
+![Cohort repurchase](../EDA/charts/22_cohort_repurchase_by_week.png)
+![Spike category mix](../EDA/charts/23_spike_category_mix.png)
+
+- 180 天內回購率：首購在高峰週 1.70% [1.37–2.10]，其他週 2.02% [1.91–2.15]（差 −0.33 個百分點，p = 0.13）。
+- 高峰週占比上升最多的品類：`toys` 3.7% → 7.7%、`garden_tools` 3.4% → 5.7%、`perfumery` 3.1% → 4.3%。
+
+## 7. 回購者 (Repeat Buyers)
+
+### 7.1 購買次數漏斗
+![Purchase funnel](../EDA/charts/26_purchase_funnel.png)
+
+- 達到第 n 次購買的顧客數：94,990 → 2,065 → 156 → 32 → 14 → 8 → 3 → 1（最多 16 個購買日期）。
+- 各步轉換率：第 1 → 2 次 2.2%，之後依序為 7.6%、20.5%、43.8%、57.1%。
+
+### 7.2 各次購買的消費額與品類
+![Spend by purchase](../EDA/charts/27_repeat_spend_by_purchase.png)
+![Category by purchase](../EDA/charts/28_repeat_category_by_purchase.png)
+
+- 同一批 2,065 位顧客第 1 次 vs 第 2 次購買：中位數 R$ 107 → R$ 108，48.3% 第二次花得較多，Wilcoxon 配對檢定 p = 0.50。
+- 第 1、2 次購買的品類組成相近（例如 `bed_bath_table` 12.3% → 12.1%、`sports_leisure` 9.8% → 9.4%）。
+- 回購中有 35–41% 與前一次購買同品類。
+
+## 8. 運費、商品價值、距離與重量 (Freight, Value, Distance and Weight)
+
+### 8.1 依商品價值看運費占比
+![Value vs freight ratio](../EDA/charts/29_category_value_vs_freight_ratio.png)
+
+- 每筆出貨運費中位數 R$ 17.07，商品金額中位數 R$ 84.99。
+- 商品金額與運費占比的 Spearman ρ：32 個品類之間 −0.71，99,542 筆出貨之間 −0.78。
+- 運費占比中位數：`electronics` 63%（商品中位數 R$ 22）、`telephony` 44%（R$ 30）、`watches_gifts` 11%（R$ 140）。
+
+### 8.2 依距離與重量看運費
+![Freight vs distance](../EDA/charts/30_freight_vs_distance_by_weight.png)
+
+- 每個重量層的運費都隨距離上升。分箱中位數的直線擬合：< 0.5 kg 為 R$ 11.7 + 每 100 km R$ 0.60；0.5–2 kg 為 R$ 12.0 + R$ 0.88；2–10 kg 為 R$ 18.4 + R$ 1.08；≥ 10 kg 為 R$ 38.9 + R$ 2.53。
+- 距離與運費的 Spearman ρ：整體 0.58，由最輕到最重的重量層依序為 0.78 到 0.41。
+
+### 8.3 各品類的寄送距離分布
+![Distance mix](../EDA/charts/31_category_distance_mix.png)
+![Far share](../EDA/charts/32_far_share_vs_value_and_weight.png)
+
+- 寄送 ≥ 1,000 km 的出貨占比，從 8.5%（`bed_bath_table`）到 23.9%（`telephony`）。
+- 各品類之間，遠距占比與重量中位數的 ρ = −0.37，與商品金額中位數 +0.08，與運費占比 −0.06。

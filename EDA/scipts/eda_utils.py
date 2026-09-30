@@ -1,7 +1,12 @@
 """Shared helpers for EDA scripts: DB access, chart style and output paths."""
 import os
+import sys
 import time
 from pathlib import Path
+
+# Windows consoles (cp950) cannot print "≥", "×" etc.; replace instead of crashing
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(errors="replace")
 
 import duckdb
 import matplotlib

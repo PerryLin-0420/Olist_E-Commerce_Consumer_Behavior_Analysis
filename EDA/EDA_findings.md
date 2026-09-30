@@ -5,7 +5,7 @@
 This document describes **what the data shows**. It reports observed patterns only and does not claim causes; any "why" is left for later hypothesis testing.
 
 - Source: `DB/olist.duckdb` built by `ETL_scripts/Auto_ETL.bat`
-- Scripts: `EDA/scipts/01_*.py` – `05_*.py`; charts in `EDA/charts/`, tables in `EDA/outputs/`
+- Scripts: `EDA/scipts/01_*.py` – `08_*.py` and `random_forest/scripts/04_*.py` – `07_*.py`; charts in `EDA/charts/` and `random_forest/charts/`, tables in the matching `outputs/` folders
 - Period: 2016-09-04 to 2018-10-17 (2016 Q3/Q4 and 2018 Q3/Q4 are partial quarters)
 
 ## Definitions
@@ -90,7 +90,7 @@ This document describes **what the data shows**. It reports observed patterns on
 ### 3.1 Repeat purchase rate per seller
 ![Seller repeat rate](charts/05_seller_repeat_rate_iqr_by_category.png)
 
-- At customer level, 97.0% of buying customers placed only one valid order.
+- At customer level, 97.0% of buying customers placed only one valid order (97.8% when same-day orders are merged into one purchase date, see 5.1).
 - Per seller × category (sellers with ≥ 30 customers, 635 pairs): 63% of sellers have no repeat customer at all; overall Q1 = 0%, median = 0%, Q3 = 1.1%.
 - Only 3 categories have a median above 0%: `construction_tools_construction` 1.35%, `bed_bath_table` 0.41%, `fashion_bags_accessories` 0.31%. `fashion_bags_accessories` has the widest spread (Q3 4.33%).
 
@@ -132,3 +132,92 @@ This document describes **what the data shows**. It reports observed patterns on
 
 - Median payment per order: North R$ 142, Northeast R$ 130, Center-West R$ 114, South R$ 108, Southeast R$ 100.
 - Orders per customer are similar in every region (1.027–1.035), so the regional ranking of spend per customer matches the ranking of order value.
+
+## 5. Customer Activity
+
+Scripts: `random_forest/scripts/04_*.py` – `07_*.py`; charts in `random_forest/charts/`.
+
+### 5.1 Purchase count and the active cut-off
+![Purchase distribution](../random_forest/charts/activity_purchase_distribution.png)
+
+- Purchase count = distinct purchase dates per customer (any seller). 823 of 2,888 multi-order customers placed all of their orders on one day, and a quarter of the gaps between consecutive orders are under 7 minutes.
+- Active = purchases on ≥ 2 dates: 2,065 customers (2.17%); one-time: 92,925.
+- A two-component geometric mixture fits the distribution far better than one geometric distribution (likelihood ratio 409): 99.05% of customers buy again with probability 1.9%, 0.95% with probability 36.2%.
+
+### 5.2 Active vs one-time customers
+![Effect sizes](../random_forest/charts/activity_effect_sizes.png)
+![Review](../random_forest/charts/active_vs_one_time_review.png)
+![Spend](../random_forest/charts/active_vs_one_time_spend.png)
+
+- Large differences appear only in features that grow with the number of purchases (orders, sellers, categories, total spend). All other features differ negligibly (|Cliff's δ| ≤ 0.13): order value, item price, freight ratio, distance, delivery time, category mix, payment and review.
+- 5-star share: one-time 58.1%, active customers' first purchase 63.0%, later purchases 65.7% (Cliff's δ 0.05–0.08).
+- Median spend per purchase: R$ 106 (one-time) and R$ 107 (active, first and later purchases).
+- Segmenting active customers with a random forest gives lower separation and stability than same-size random samples of one-time customers on all four quality metrics.
+
+### 5.3 Location
+![Activity geography](../random_forest/charts/activity_geography_map.png)
+
+- State shares of active and one-time customers correlate at 0.9988; state × tier chi-square p = 0.093, Cramér's V = 0.019.
+- Active rate by region: Southeast 2.30%, South 2.06%, Center-West 1.98%, North 1.80%, Northeast 1.63% (region × tier p = 0.0005, Cramér's V = 0.015).
+
+## 6. Purchases Over Time
+
+### 6.1 Weekly volume
+![Weekly purchases](charts/21_weekly_purchases_by_category.png)
+![All categories](charts/24_weekly_orders_all_categories.png)
+
+- Weekly orders averaged 853 in 2017 and 1,571 in January–August 2018.
+- Two spike weeks stand out (robust z ≥ 3 vs the centered 9-week rolling median): 2017-11-20 with 2,972 orders (×2.3) and 2017-11-27 with 2,077 (×1.6). The next highest week has z = 2.6.
+- In the 2017-11-20 week 2,881 of 2,931 customers were new; returning customers are 2.2% of weekly customers across the whole period.
+- 38 of 74 categories reach ≥ ×1.5 their own rolling baseline in the spike weeks.
+
+### 6.2 Price and volume
+![Price and volume](charts/25_weekly_price_volume.png)
+
+- Mean order value: R$ 155 in the spike weeks vs R$ 161 in other weeks; median R$ 103 vs R$ 104.
+- Spearman ρ between weekly orders and weekly mean order value: −0.07.
+
+### 6.3 Spike-week buyers
+![Cohort repurchase](charts/22_cohort_repurchase_by_week.png)
+![Spike category mix](charts/23_spike_category_mix.png)
+
+- 180-day repurchase rate: 1.70% [1.37–2.10] for customers whose first purchase fell in a spike week vs 2.02% [1.91–2.15] for other weeks (difference −0.33 pp, p = 0.13).
+- Category shares rising most in the spike weeks: `toys` 3.7% → 7.7%, `garden_tools` 3.4% → 5.7%, `perfumery` 3.1% → 4.3%.
+
+## 7. Repeat Buyers
+
+### 7.1 Funnel
+![Purchase funnel](charts/26_purchase_funnel.png)
+
+- Customers reaching each purchase: 94,990 → 2,065 → 156 → 32 → 14 → 8 → 3 → 1 (maximum 16 purchase dates).
+- Step conversion: 2.2% from the 1st to the 2nd purchase, then 7.6%, 20.5%, 43.8%, 57.1%.
+
+### 7.2 Spend and category by purchase number
+![Spend by purchase](charts/27_repeat_spend_by_purchase.png)
+![Category by purchase](charts/28_repeat_category_by_purchase.png)
+
+- Same 2,065 customers, 1st vs 2nd purchase: median R$ 107 → R$ 108, 48.3% spent more the second time, Wilcoxon signed-rank p = 0.50.
+- The category mix of 1st and 2nd purchases is close (e.g. `bed_bath_table` 12.3% → 12.1%, `sports_leisure` 9.8% → 9.4%).
+- 35–41% of repeat purchases are in the same category as the purchase before.
+
+## 8. Freight, Value, Distance and Weight
+
+### 8.1 Freight share by product value
+![Value vs freight ratio](charts/29_category_value_vs_freight_ratio.png)
+
+- Median freight per shipment R$ 17.07, median product value R$ 84.99.
+- Spearman ρ between product value and freight ratio: −0.71 across 32 categories, −0.78 across 99,542 shipments.
+- Median freight ratio: `electronics` 63% (median value R$ 22), `telephony` 44% (R$ 30), `watches_gifts` 11% (R$ 140).
+
+### 8.2 Freight by distance and weight
+![Freight vs distance](charts/30_freight_vs_distance_by_weight.png)
+
+- Freight rises with distance in every weight tier. Straight-line fits of the binned medians: < 0.5 kg R$ 11.7 + R$ 0.60 per 100 km; 0.5–2 kg R$ 12.0 + R$ 0.88; 2–10 kg R$ 18.4 + R$ 1.08; ≥ 10 kg R$ 38.9 + R$ 2.53.
+- Spearman ρ between distance and freight: 0.58 overall, 0.78 to 0.41 from the lightest to the heaviest tier.
+
+### 8.3 Distance mix by category
+![Distance mix](charts/31_category_distance_mix.png)
+![Far share](charts/32_far_share_vs_value_and_weight.png)
+
+- Share of shipments ≥ 1,000 km ranges from 8.5% (`bed_bath_table`) to 23.9% (`telephony`).
+- Across categories, the far share correlates with median weight at ρ = −0.37, with median product value at +0.08 and with freight ratio at −0.06.
