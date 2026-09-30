@@ -226,3 +226,6 @@ ETL_scripts/logs/
 
 # EDA chart temp files (written then swapped in by eda_utils.save)
 EDA/charts/*.tmp.png
+
+# Random forest feature tables (rebuilt by random_forest/Auto_RF.bat)
+random_forest/features/

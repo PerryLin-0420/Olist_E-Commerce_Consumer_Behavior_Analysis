@@ -61,3 +61,19 @@ Run logs are written to `ETL_scripts/logs/etl.log` (not version-controlled).
 - `geolocation` contains 261,831 exact duplicate rows and 42 points outside Brazil. `geolocation_zip` removes duplicates, excludes out-of-bounds points and aggregates by zip prefix.
 - 158 customer zip prefixes and 7 seller zip prefixes are not found in `geolocation_zip`.
 - `customer_unique_id` is not unique: the same person gets a different `customer_id` for every order, and 2,997 `customer_unique_id` values map to more than one `customer_id`.
+
+## Random Forest Segmentation
+
+Segments sellers and customers with an unsupervised random forest (50 trees), then enumerates every seller segment × customer segment pairing to check whether seller types have fixed customer types.
+
+```bash
+random_forest\Auto_RF.bat
+```
+
+| Step | Script | Description |
+|---|---|---|
+| 01 | `01_build_features.py` | One feature row per seller (location, category mix, product size, diversity, sales, service) and per customer (location, category mix, order value, frequency, payment, experience) |
+| 02 | `02_cluster.py` | Unsupervised random forest (real vs column-shuffled synthetic data) → leaf proximity → Ward clustering, k chosen by silhouette; a supervised forest explains the segments |
+| 03 | `03_overlap.py` | Every seller × customer segment pair via shipments: share, lift, standardized residual, Cramér's V |
+
+Outputs: `random_forest/features/`, `random_forest/outputs/`, `random_forest/charts/`.

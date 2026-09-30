@@ -61,3 +61,19 @@ ETL_scripts\Auto_ETL.bat
 - `geolocation` 含 261,831 筆完全重複列、42 筆座標落在巴西境外；`geolocation_zip` 已去重、排除境外座標後以 zip prefix 彙總。
 - 158 個顧客 zip prefix、7 個賣家 zip prefix 在 `geolocation_zip` 中找不到。
 - `customer_unique_id` 非唯一：同一個人每筆訂單會有不同的 `customer_id`，有 2,997 個 `customer_unique_id` 對應多個 `customer_id`。
+
+## 隨機森林分群 (Random Forest Segmentation)
+
+以非監督式隨機森林（50 棵樹）分別對店家與顧客分群，再窮舉所有「店家群 × 顧客群」配對，確認店家類型是否有固定配對的顧客類型。
+
+```bash
+random_forest\Auto_RF.bat
+```
+
+| 步驟 | 腳本 | 說明 |
+|---|---|---|
+| 01 | `01_build_features.py` | 每家店家一列特徵（位置、品類組成、商品大小、多樣性、銷售、服務），每位顧客一列特徵（位置、品類組成、訂單金額、頻率、付款、購物體驗） |
+| 02 | `02_cluster.py` | 非監督式 RF（真實資料 vs 各欄獨立打亂的合成資料）→ 葉節點相似度 → Ward 階層式分群，群數依輪廓係數挑選；再以監督式 RF 解釋各群差異 |
+| 03 | `03_overlap.py` | 以出貨紀錄窮舉每一組店家群 × 顧客群：占比、lift、標準化殘差、Cramér's V |
+
+輸出：`random_forest/features/`、`random_forest/outputs/`、`random_forest/charts/`。
