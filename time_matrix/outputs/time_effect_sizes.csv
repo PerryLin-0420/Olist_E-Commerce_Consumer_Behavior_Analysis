@@ -1,0 +1,28 @@
+metric,grouping,measure,value
+Order value,Weekday,epsilon²,9.748264582440718e-05
+Order value,Hour,epsilon²,0.0008133028927188725
+Order value,Weekday × hour,epsilon²,0.0023050373630345376
+Installments,Weekday,epsilon²,0.001241187087464472
+Installments,Hour,epsilon²,0.0019092417896651272
+Installments,Weekday × hour,epsilon²,0.004913137600364826
+Items per order,Weekday,epsilon²,0.00020645429033731364
+Items per order,Hour,epsilon²,0.0004818024121736623
+Items per order,Weekday × hour,epsilon²,0.0017975494359602686
+Freight ratio,Weekday,epsilon²,0.00011497821001479831
+Freight ratio,Hour,epsilon²,0.00037081636406245113
+Freight ratio,Weekday × hour,epsilon²,0.0016068683899151752
+Review score,Weekday,epsilon²,0.00041433018453388353
+Review score,Hour,epsilon²,0.0003809972051120241
+Review score,Weekday × hour,epsilon²,0.0023289903131617977
+Payment type,Weekday,Cramér's V,0.03404686592116297
+Payment type,Hour,Cramér's V,0.03930553907390176
+Payment type,Weekday × hour,Cramér's V,0.06537727282226509
+Pays in installments,Weekday,Cramér's V,0.03503720566315138
+Pays in installments,Hour,Cramér's V,0.0428212778884641
+Pays in installments,Weekday × hour,Cramér's V,0.06898802129837343
+Category (top 20 + other),Weekday,Cramér's V,0.019857150935843036
+Category (top 20 + other),Hour,Cramér's V,0.019959285259425443
+Category (top 20 + other),Weekday × hour,Cramér's V,0.0446463209795146
+Customer state,Weekday,Cramér's V,0.017706100637903954
+Customer state,Hour,Cramér's V,0.01990270965631723
+Customer state,Weekday × hour,Cramér's V,0.043643899867473766

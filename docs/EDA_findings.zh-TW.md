@@ -5,7 +5,7 @@
 本文件描述**資料呈現的現象**，只陳述觀察到的樣態，不推論成因；「為什麼」留待後續假設檢定。
 
 - 資料來源：由 `ETL_scripts/Auto_ETL.bat` 建立的 `DB/olist.duckdb`
-- 腳本：`EDA/scipts/01_*.py` – `08_*.py` 與 `random_forest/scripts/04_*.py` – `07_*.py`；圖表在 `EDA/charts/` 與 `random_forest/charts/`，統計表在對應的 `outputs/` 資料夾
+- 腳本：`EDA/scipts/01_*.py` – `08_*.py`、`random_forest/scripts/04_*.py` – `07_*.py` 與 `time_matrix/scripts/01_*.py` – `05_*.py`；圖表在 `EDA/charts/`、`random_forest/charts/` 與 `time_matrix/charts/`，統計表在對應的 `outputs/` 資料夾
 - 期間：2016-09-04 至 2018-10-17（2016 Q3/Q4 與 2018 Q3/Q4 為不完整季度）
 
 ## 名詞定義 (Definitions)
@@ -221,3 +221,60 @@
 
 - 寄送 ≥ 1,000 km 的出貨占比，從 8.5%（`bed_bath_table`）到 23.9%（`telephony`）。
 - 各品類之間，遠距占比與重量中位數的 ρ = −0.37，與商品金額中位數 +0.08，與運費占比 −0.06。
+
+## 9. 星期 × 小時 (Weekday × Hour)
+
+腳本：`time_matrix/scripts/01_*.py` – `05_*.py`；圖表在 `time_matrix/charts/`。共 98,206 筆有效訂單、92 週；小時以資料中的購買時間戳記為準。
+
+### 9.1 訂單量、訂單金額與分期
+![Orders matrix](../time_matrix/charts/01_orders_matrix.png)
+![Order value matrix](../time_matrix/charts/02_order_value_matrix.png)
+![Installments matrix](../time_matrix/charts/03_installments_matrix.png)
+
+- 各星期的訂單占比：週一 16.3%、週二 16.0%、週三 15.6%、週四 14.8%、週五 14.2%、週日 12.0%、週六 11.0%。
+- 平日 10:00–22:00 的每個時段有 695–1,106 筆訂單；最多是週二 14:00（1,106 筆），最少是週一 04:00（21 筆）。週日 18:00–22:00 每小時 864–956 筆。
+- 各星期的平均訂單金額：R$ 156（週日）到 R$ 163（週五）。
+- 平均分期期數（一次付清記為 0）：平日 2.36–2.47，週六 2.66，週日 2.58；51.5% 的訂單有分期。
+
+### 9.2 時段群數
+![k selection](../time_matrix/charts/04_k_selection_curves.png)
+
+- 以 168 個時段（log 每週訂單數、平均訂單金額、平均分期）做 KMeans，並用 100 次整週重抽（week-block bootstrap）評分。
+- k = 10 時：輪廓係數 0.30、bootstrap ARI 0.42。平衡分數（√(輪廓係數 × ARI)）從 k = 15 到 k = 6 都停在 0.31–0.38。
+- 從 k = 5 往下兩項分數同時上升；平衡分數在 k = 3 最高（輪廓係數 0.54、ARI 0.81、平衡 0.66）。k = 2 到 5 的 95% 區間與最佳值重疊。
+
+### 9.3 三個時段群
+![Cluster map](../time_matrix/charts/05_cluster_map.png)
+![Cluster profile](../time_matrix/charts/06_cluster_profile.png)
+
+| 群 | 時段數 | 在一週中的位置 | 占訂單 | 每時段每週訂單 | 平均訂單金額 | 平均分期 |
+|---|---|---|---|---|---|---|
+| T1 | 122 | 每天約 08:00–00:00（週三、週四從 07:00，週日從 10:00） | 95.8% | 8.4 | R$ 161 | 2.44 |
+| T2 | 14 | 零散的深夜與清晨時段，加上週六 14:00 | 2.0% | 1.5 | R$ 184 | 2.94 |
+| T3 | 32 | 主要為 01:00–07:00 | 2.3% | 0.8 | R$ 129 | 2.22 |
+
+- boleto 占比、每單件數、運費占比與評分在各群之間差異很小（例如評分 4.10–4.12）。
+
+### 9.4 關聯與穩定度
+![Cell correlations](../time_matrix/charts/07_cell_correlations.png)
+![Effect sizes](../time_matrix/charts/08_time_effect_sizes.png)
+![Weekly fingerprint](../time_matrix/charts/09_weekly_fingerprint.png)
+![Period matrices](../time_matrix/charts/10_period_matrices.png)
+
+- 以時段為單位，越忙的時段 boleto 占比越高（ρ = +0.42）、分期越少（ρ = −0.46）。
+- 以單筆訂單來看，時段能解釋的差異很小：訂單金額 epsilon² 0.0023、分期 0.0049；付款方式 Cramér's V 0.065、是否分期 0.069。
+- 訂單占比的時間樣態會重現：四個時期之間 r = 0.94–0.98，奇偶週之間 0.98，有無高峰週之間 1.00。每週與其餘各週的相關中位數 0.81；黑色星期五那週為 0.39。
+- 訂單金額與分期的時間樣態在時期之間不重現（r = 0.04–0.22 與 −0.04–0.36）。
+- 各時期分別重新分群，3 群會重現（ARI 0.69–0.80），10 群不會（0.26–0.41）。
+
+### 9.5 T1 內的黃金時段
+![T1 price and volume](../time_matrix/charts/11_t1_price_volume.png)
+![T1 revenue matrix](../time_matrix/charts/12_t1_revenue_matrix.png)
+
+- 黃金時段 = 在 1,000 次整週重抽中，以每週營收計進入 T1 前 25% 的比例 ≥ 90%；候選時段 = 50–90%。
+- 9 個黃金時段：**週一 14–16 點與 21 點、週二 14 點與 16 點、週三 14 點與 16 點、週五 16 點**。每個時段每週 R$ 1.87K–1.99K；9 個中有 8 個在四個時期都進入前 25%。合計占 T1 時段數 7%、T1 營收 11%。
+- 26 個候選時段（每週 R$ 1.69K–1.86K）：週一 10–13、19–20、22 點；週二 10–11、13、15、17、20–22 點；週三 10–11、13、15、17 點；週四 12、16 點；週五 11、13–15 點。
+- 黃金時段每週訂單中位數 11.7 筆，其他 T1 時段 8.8 筆；平均訂單金額 R$ 167 vs R$ 160。
+- 在 T1 各時段之間，每週營收跟隨訂單量（ρ = 0.98）多於平均訂單金額（ρ = 0.53）。
+- 各星期 T1 單一時段每週營收中位數：週一 R$ 1,726、週二 R$ 1,696、週三 R$ 1,544、週四 R$ 1,495、週五 R$ 1,354、週日 R$ 1,198、週六 R$ 1,159。
+- 奇數週與偶數週各自找出的黃金時段，Jaccard 重疊為 0.44。

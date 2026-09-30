@@ -1,0 +1,2 @@
+t1_cells,golden_cells,candidate_cells,golden_share_of_t1_revenue,golden_share_of_t1_cells,golden_orders_per_week_median,other_orders_per_week_median,golden_aov_mean,other_aov_mean,rho_revenue_vs_volume,rho_revenue_vs_aov,split_half_jaccard,golden_in_all_4_periods,golden_blocks
+122,9,26,0.10535168898147262,0.07377049180327869,11.673913043478262,8.771739130434783,166.87761045230351,159.79702802167895,0.9786661027829634,0.5345795566071093,0.4418604651162791,8,"Mon 14–16h, 21h; Tue 14h, 16h; Wed 14h, 16h; Fri 16h"

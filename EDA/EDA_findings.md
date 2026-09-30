@@ -5,7 +5,7 @@
 This document describes **what the data shows**. It reports observed patterns only and does not claim causes; any "why" is left for later hypothesis testing.
 
 - Source: `DB/olist.duckdb` built by `ETL_scripts/Auto_ETL.bat`
-- Scripts: `EDA/scipts/01_*.py` – `08_*.py` and `random_forest/scripts/04_*.py` – `07_*.py`; charts in `EDA/charts/` and `random_forest/charts/`, tables in the matching `outputs/` folders
+- Scripts: `EDA/scipts/01_*.py` – `08_*.py`, `random_forest/scripts/04_*.py` – `07_*.py` and `time_matrix/scripts/01_*.py` – `05_*.py`; charts in `EDA/charts/`, `random_forest/charts/` and `time_matrix/charts/`, tables in the matching `outputs/` folders
 - Period: 2016-09-04 to 2018-10-17 (2016 Q3/Q4 and 2018 Q3/Q4 are partial quarters)
 
 ## Definitions
@@ -221,3 +221,60 @@ Scripts: `random_forest/scripts/04_*.py` – `07_*.py`; charts in `random_forest
 
 - Share of shipments ≥ 1,000 km ranges from 8.5% (`bed_bath_table`) to 23.9% (`telephony`).
 - Across categories, the far share correlates with median weight at ρ = −0.37, with median product value at +0.08 and with freight ratio at −0.06.
+
+## 9. Weekday × Hour
+
+Scripts: `time_matrix/scripts/01_*.py` – `05_*.py`; charts in `time_matrix/charts/`. 98,206 valid orders over 92 weeks; hours are the purchase timestamps as stored.
+
+### 9.1 Orders, order value and installments
+![Orders matrix](../time_matrix/charts/01_orders_matrix.png)
+![Order value matrix](../time_matrix/charts/02_order_value_matrix.png)
+![Installments matrix](../time_matrix/charts/03_installments_matrix.png)
+
+- Share of orders by weekday: Mon 16.3%, Tue 16.0%, Wed 15.6%, Thu 14.8%, Fri 14.2%, Sun 12.0%, Sat 11.0%.
+- Weekday cells from 10:00 to 22:00 hold 695–1,106 orders each; the busiest cell is Tue 14:00 (1,106), the quietest Mon 04:00 (21). Sunday 18:00–22:00 holds 864–956 per hour.
+- Mean order value per weekday: R$ 156 (Sun) to R$ 163 (Fri).
+- Mean installments (paid in full = 0): 2.36–2.47 on weekdays, 2.66 on Saturday, 2.58 on Sunday; 51.5% of orders are paid in installments.
+
+### 9.2 Number of time segments
+![k selection](../time_matrix/charts/04_k_selection_curves.png)
+
+- KMeans on the 168 cells (log orders per week, mean order value, mean installments), scored on 100 week-block bootstrap samples.
+- At k = 10: silhouette 0.30, bootstrap ARI 0.42. Balance (√(silhouette × ARI)) stays at 0.31–0.38 from k = 15 to k = 6.
+- Both scores rise from k = 5 down; the balance peaks at k = 3 (silhouette 0.54, ARI 0.81, balance 0.66). The 95% bands of k = 2 to 5 overlap the best.
+
+### 9.3 Three time segments
+![Cluster map](../time_matrix/charts/05_cluster_map.png)
+![Cluster profile](../time_matrix/charts/06_cluster_profile.png)
+
+| Segment | Cells | Where in the week | Share of orders | Orders / cell / week | Mean order value | Mean installments |
+|---|---|---|---|---|---|---|
+| T1 | 122 | about 08:00–00:00 every day (07:00 Wed/Thu, 10:00 Sun) | 95.8% | 8.4 | R$ 161 | 2.44 |
+| T2 | 14 | scattered night and early-morning cells, plus Sat 14:00 | 2.0% | 1.5 | R$ 184 | 2.94 |
+| T3 | 32 | mostly 01:00–07:00 | 2.3% | 0.8 | R$ 129 | 2.22 |
+
+- Boleto share, items per order, freight ratio and review score differ little between segments (e.g. review 4.10–4.12).
+
+### 9.4 Association and stability
+![Cell correlations](../time_matrix/charts/07_cell_correlations.png)
+![Effect sizes](../time_matrix/charts/08_time_effect_sizes.png)
+![Weekly fingerprint](../time_matrix/charts/09_weekly_fingerprint.png)
+![Period matrices](../time_matrix/charts/10_period_matrices.png)
+
+- Across cells, busier cells have a higher boleto share (ρ = +0.42) and fewer installments (ρ = −0.46).
+- At order level the time slot explains little: epsilon² 0.0023 for order value and 0.0049 for installments; Cramér's V 0.065 for payment type and 0.069 for paying in installments.
+- The order-share pattern repeats: r = 0.94–0.98 between the four periods, 0.98 between odd and even weeks, 1.00 with and without the spike weeks. Each week correlates with the rest at a median of 0.81; the Black Friday week at 0.39.
+- The order-value and installment patterns do not repeat between periods (r = 0.04–0.22 and −0.04–0.36).
+- Refitting on each period gives back the 3 segments (ARI 0.69–0.80) but not the 10 segments (0.26–0.41).
+
+### 9.5 Golden slots within T1
+![T1 price and volume](../time_matrix/charts/11_t1_price_volume.png)
+![T1 revenue matrix](../time_matrix/charts/12_t1_revenue_matrix.png)
+
+- Golden = the slot ranks in the top quarter of T1 by revenue per week in ≥ 90% of 1,000 week-block bootstrap samples; candidate = 50–90%.
+- 9 golden slots: **Mon 14–16h and 21h, Tue 14h and 16h, Wed 14h and 16h, Fri 16h**. Each takes R$ 1.87K–1.99K per week; 8 of the 9 are in the top quarter in all four periods. Together they are 7% of T1 cells and 11% of T1 revenue.
+- 26 candidate slots (R$ 1.69K–1.86K per week): Mon 10–13h, 19–20h, 22h; Tue 10–11h, 13h, 15h, 17h, 20–22h; Wed 10–11h, 13h, 15h, 17h; Thu 12h, 16h; Fri 11h, 13–15h.
+- Golden slots take a median of 11.7 orders per week vs 8.8 in the other T1 slots; mean order value R$ 167 vs R$ 160.
+- Across T1 slots, revenue per week follows order volume (ρ = 0.98) more than mean order value (ρ = 0.53).
+- Median revenue per week of a T1 slot by weekday: Mon R$ 1,726, Tue R$ 1,696, Wed R$ 1,544, Thu R$ 1,495, Fri R$ 1,354, Sun R$ 1,198, Sat R$ 1,159.
+- The golden set from odd weeks and from even weeks overlaps with Jaccard 0.44.
