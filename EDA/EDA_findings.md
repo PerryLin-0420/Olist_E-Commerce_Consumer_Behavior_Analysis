@@ -270,11 +270,13 @@ Scripts: `time_matrix/scripts/01_*.py` – `05_*.py`; charts in `time_matrix/cha
 ### 9.5 Golden slots within T1
 ![T1 price and volume](../time_matrix/charts/11_t1_price_volume.png)
 ![T1 revenue matrix](../time_matrix/charts/12_t1_revenue_matrix.png)
+![Golden order share](../time_matrix/charts/13_golden_order_share.png)
 
 - Golden = the slot ranks in the top quarter of T1 by revenue per week in ≥ 90% of 1,000 week-block bootstrap samples; candidate = 50–90%.
 - 9 golden slots: **Mon 14–16h and 21h, Tue 14h and 16h, Wed 14h and 16h, Fri 16h**. Each takes R$ 1.87K–1.99K per week; 8 of the 9 are in the top quarter in all four periods. Together they are 7% of T1 cells and 11% of T1 revenue.
 - 26 candidate slots (R$ 1.69K–1.86K per week): Mon 10–13h, 19–20h, 22h; Tue 10–11h, 13h, 15h, 17h, 20–22h; Wed 10–11h, 13h, 15h, 17h; Thu 12h, 16h; Fri 11h, 13–15h.
 - Golden slots take a median of 11.7 orders per week vs 8.8 in the other T1 slots; mean order value R$ 167 vs R$ 160.
+- Share of all 98,206 orders: golden slots 9.7% (9,529; 5.4% of the week's 168 hours), candidate 26.3% (25,875; 15.5%), other T1 59.7% (58,631; 51.8%), night T2 + T3 4.2% (4,171; 27.4%). Golden + candidate slots take 36.1%.
 - Across T1 slots, revenue per week follows order volume (ρ = 0.98) more than mean order value (ρ = 0.53).
 - Median revenue per week of a T1 slot by weekday: Mon R$ 1,726, Tue R$ 1,696, Wed R$ 1,544, Thu R$ 1,495, Fri R$ 1,354, Sun R$ 1,198, Sat R$ 1,159.
 - The golden set from odd weeks and from even weeks overlaps with Jaccard 0.44.

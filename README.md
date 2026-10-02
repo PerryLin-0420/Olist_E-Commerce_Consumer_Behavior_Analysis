@@ -264,8 +264,9 @@ These are my personal views, inferred from the patterns observed in [EDA Finding
    |---|---|---|
    | 🥇 Primary | **Mon 14–16h, Mon 21h, Tue 14h, Tue 16h, Wed 14h, Wed 16h, Fri 16h** | Top quarter of T1 by revenue per week in ≥ 97% of 1,000 bootstraps; R$ 1.87K–1.99K per slot per week; 8 of 9 in the top quarter in all four periods |
    | 🥈 Secondary | Weekdays 10–17h around the primary slots; Mon and Tue 19–22h (26 candidate slots) | Top quarter in 50–90% of bootstraps; R$ 1.69K–1.86K per slot per week |
-   | ⬇️ Low | 01–07h (T2 and T3); Saturday and Sunday daytime | Night segments hold 4.3% of orders; median weekend slot R$ 1.16K–1.20K per week vs R$ 1.73K on Monday. Within the weekend, Sunday 18–22h is the busiest stretch (864–956 orders per hour) |
+   | ⬇️ Low | 01–07h (T2 and T3); Saturday and Sunday daytime | Night segments hold 4.2% of orders; median weekend slot R$ 1.16K–1.20K per week vs R$ 1.73K on Monday. Within the weekend, Sunday 18–22h is the busiest stretch (864–956 orders per hour) |
 
+   - The 9 golden slots are 5.4% of the week's 168 hours but take **9.7% of all orders** (9,529 of 98,206); golden + candidate slots (35, 20.8% of the hours) take 36.1%.
    - Aim these pushes at **order volume, not basket size**: golden slots differ from other T1 slots mainly in orders (11.7 vs 8.8 per week) and only slightly in order value (R$ 167 vs R$ 160); revenue per slot follows volume (ρ = 0.98) more than order value (ρ = 0.53).
    - Do not schedule price or installment offers by hour: the order-value and installment patterns by slot do not repeat between periods.
    - Use the primary and secondary slots as one band: the Mon–Wed 14–16h core is stable, but single-slot boundaries shift (the golden sets from odd and even weeks overlap with a Jaccard of only 0.44).
@@ -275,7 +276,8 @@ These are my personal views, inferred from the patterns observed in [EDA Finding
 
    <img src="time_matrix/charts/11_t1_price_volume.png" alt="11_t1_price_volume" width="760">
    <img src="time_matrix/charts/12_t1_revenue_matrix.png" alt="12_t1_revenue_matrix" width="760">
+   <img src="time_matrix/charts/13_golden_order_share.png" alt="13_golden_order_share" width="760">
 
-   Tables: `time_matrix/outputs/golden_cells.csv`, `golden_summary.csv`.
+   Tables: `time_matrix/outputs/golden_cells.csv`, `golden_summary.csv`, `golden_order_share.csv`.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

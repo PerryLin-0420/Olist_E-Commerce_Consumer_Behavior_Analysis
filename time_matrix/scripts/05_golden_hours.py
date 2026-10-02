@@ -13,8 +13,8 @@ Checks
 - What drives the ranking: Spearman correlation of revenue per week with
   orders per week and with mean order value across T1 cells.
 
-Outputs: outputs/golden_cells.csv, golden_summary.csv; charts/11_t1_price_volume.png,
-12_t1_revenue_matrix.png
+Outputs: outputs/golden_cells.csv, golden_summary.csv, golden_order_share.csv;
+charts/11_t1_price_volume.png, 12_t1_revenue_matrix.png, 13_golden_order_share.png
 """
 import numpy as np
 import pandas as pd
@@ -22,7 +22,7 @@ from matplotlib.patches import Rectangle
 
 from tm_common import (HOURS, OUTPUT_DIR, PERIODS, RANDOM_STATE, WEEKDAYS, load_orders,
                        weekly_cell_sums)
-from eda_utils import (DPI, GRID, INK, INK_2, MUTED, SEQ_CMAP, SERIES, SURFACE,  # noqa: E402
+from eda_utils import (BASELINE, DPI, GRID, INK, INK_2, MUTED, OTHER, SEQ_CMAP, SERIES, SURFACE,  # noqa: E402
                        fmt_brl, legend, new_figure, save, save_table, set_titles, style_axes)
 
 N_GOLDEN_BOOT = 1000
@@ -128,6 +128,7 @@ def main() -> None:
     save_table(pd.DataFrame([summary]), "golden_summary")
     chart_quadrant(table, summary)
     chart_matrix(table, t1, summary)
+    chart_order_share(table, tot_orders, t1)
     print({k: (round(v, 3) if isinstance(v, float) else v) for k, v in summary.items()})
     print(golden[["weekday", "hour", "orders_per_week", "mean_order_value", "revenue_per_week",
                   "p_top_quarter", "periods_in_top_quarter"]].round(2).to_string(index=False))
@@ -225,6 +226,49 @@ def chart_matrix(table: pd.DataFrame, t1: np.ndarray, summary: dict) -> None:
                f"{summary['golden_in_all_4_periods']} golden slots are top-quarter in all "
                f"{len(PERIODS)} periods", left=0.05)
     save(fig, "12_t1_revenue_matrix")
+
+
+def chart_order_share(table: pd.DataFrame, tot_orders: np.ndarray, t1: np.ndarray) -> None:
+    """Pie of all orders: golden, candidate, other T1 and night (T2 + T3) slots."""
+    groups = [("golden", "Golden slots"), ("candidate", "Candidate slots"),
+              ("other", "Other T1 slots")]
+    rows = []
+    for status, name in groups:
+        cells = table.loc[table["status"] == status, "cell"].to_numpy()
+        rows.append({"group": name, "slots": len(cells), "orders": int(tot_orders[cells].sum())})
+    rows.append({"group": "Night slots (T2 + T3)", "slots": int((~t1).sum()),
+                 "orders": int(tot_orders[~t1].sum())})
+    share = pd.DataFrame(rows)
+    share["order_share"] = share["orders"] / share["orders"].sum()
+    share["slot_share"] = share["slots"] / 168
+    save_table(share, "golden_order_share")
+
+    colors = [SERIES[1], SERIES[0], OTHER, GRID]
+    fig, ax = new_figure(1400, 820, left=0.04, right=0.97, top=0.84, bottom=0.04)
+    ax.set_position([0.04, 0.06, 0.42, 0.74])
+    ax.pie(share["orders"], colors=colors, startangle=90, counterclock=False,
+           wedgeprops={"edgecolor": SURFACE, "linewidth": 2 * 72 / DPI})
+    ax.set_aspect("equal")
+    # Swatch-keyed label column (doubles as the legend), in pie order from the top
+    for i, (_, r) in enumerate(share.iterrows()):
+        y = 0.7 - i * 0.16
+        fig.patches.append(Rectangle((0.5, y - 0.012), 0.012, 0.012 * 1400 / 820,
+                                     transform=fig.transFigure, facecolor=colors[i],
+                                     edgecolor=BASELINE if colors[i] == GRID else "none",
+                                     linewidth=0.6))
+        fig.text(0.522, y + 0.01, f"{r['group']}  {r['order_share']:.1%}", fontsize=10.5,
+                 fontweight="semibold", color=INK, va="center")
+        fig.text(0.522, y - 0.035, f"{r['orders']:,} orders · {r['slots']} slots "
+                 f"({r['slot_share']:.1%} of the week's hours)", fontsize=8.5, color=INK_2,
+                 va="center")
+    golden = share.iloc[0]
+    set_titles(fig, "Share of all orders placed in the golden time slots",
+               f"{share['orders'].sum():,} valid orders. The {golden['slots']} golden slots are "
+               f"{golden['slot_share']:.1%} of the week's 168 hours and take "
+               f"{golden['order_share']:.1%} of orders; golden + candidate slots "
+               f"({share['slots'][:2].sum()}) take {share['order_share'][:2].sum():.1%}",
+               left=0.04)
+    save(fig, "13_golden_order_share")
 
 
 if __name__ == "__main__":
