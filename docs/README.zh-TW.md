@@ -189,7 +189,7 @@ time_matrix\Auto_TM.bat
 | 檔案 | 內容 | 位置 |
 |---|---|---|
 | [`EDA/dashboard.pbip`](../EDA/dashboard.pbip)（含 `dashboard.Report/`、`dashboard.SemanticModel/`） | 報表與資料模型的文字檔，**不含資料** | 本專案 |
-| `dashboard.pbix` | 報表、模型與**資料快照** | [Releases](https://github.com/PerryLin-0420/Olist_E-Commerce_Consumer_Behavior_Analysis/releases) |
+| `dashboard.pbix` | 報表、模型與**資料快照** | [Releases](https://github.com/PerryLin-0420/Olist_E-Commerce_Consumer_Behavior_Analysis/releases/tag/v1.0) |
 
 - **pbix**：用 Power BI Desktop（Windows）開啟，不需要 BigQuery 權限。
 - **pbip**：用 Power BI Desktop 開啟 `dashboard.pbip`，再按「重新整理」。重新整理會要求登入 Google 帳號，且該帳號要有 BigQuery 資料集的讀取權限，沒有被授權的人無法重新整理。

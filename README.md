@@ -189,7 +189,7 @@ Full-resolution export: [docs/dashboard.pdf](docs/dashboard.pdf)
 | File | Content | Where |
 |---|---|---|
 | `EDA/dashboard.pbip` (+ `dashboard.Report/`, `dashboard.SemanticModel/`) | Report and model as text files, **no data** | this repo |
-| `dashboard.pbix` | Report, model and **a data snapshot** | [Releases](https://github.com/PerryLin-0420/Olist_E-Commerce_Consumer_Behavior_Analysis/releases) |
+| `dashboard.pbix` | Report, model and **a data snapshot** | [Releases](https://github.com/PerryLin-0420/Olist_E-Commerce_Consumer_Behavior_Analysis/releases/tag/v1.0) |
 
 - **pbix**: open with Power BI Desktop (Windows); no BigQuery access needed.
 - **pbip**: open `dashboard.pbip` in Power BI Desktop, then Refresh. Refresh asks for a Google account that can read the BigQuery dataset, so it works only for people who were granted access.
