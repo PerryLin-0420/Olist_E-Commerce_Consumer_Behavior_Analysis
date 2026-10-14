@@ -1,6 +1,14 @@
 table order_payments
 	lineageTag: 85f15a19-bb13-4945-aa5a-ca7d62cff782
 
+	measure payment_color = SQRT ( SUM ( order_payments[payment_value] ) )
+		lineageTag: d557642b-0cef-4244-b860-d827cd6deafe
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure purchase_seq_color
+		lineageTag: 9b39c5ac-45c9-4940-ad4c-5398601eb3c1
+
 	column order_id
 		dataType: string
 		lineageTag: 5b518042-437d-43f1-b3b3-a09a00cd43b4

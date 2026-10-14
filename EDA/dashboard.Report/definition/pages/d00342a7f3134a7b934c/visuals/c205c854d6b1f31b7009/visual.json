@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "c205c854d6b1f31b7009",
   "position": {
-    "x": 24,
-    "y": 819,
+    "x": 23.502590673575131,
+    "y": 829.3056994818653,
     "z": 0,
     "height": 237,
     "width": 1872,
     "tabOrder": 0
   },
   "visual": {
-    "visualType": "lineChart",
+    "visualType": "areaChart",
     "query": {
       "queryState": {
         "Category": {
@@ -121,6 +121,51 @@
             }
           ]
         },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "v_orders"
+                        }
+                      },
+                      "Property": "purchased_at"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Min(v_orders.purchased_at)",
+              "nativeQueryRef": "日期",
+              "displayName": "日期",
+              "format": "d"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "order_payments"
+                        }
+                      },
+                      "Property": "payment_value"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(order_payments.payment_value)",
+              "nativeQueryRef": "營收",
+              "displayName": "營收"
+            }
+          ]
+        },
         "Y": {
           "projections": [
             {
@@ -135,7 +180,8 @@
                 }
               },
               "queryRef": "v_orders.orders_valid",
-              "nativeQueryRef": "orders_valid"
+              "nativeQueryRef": "訂單數",
+              "displayName": "訂單數"
             }
           ]
         }
@@ -158,6 +204,25 @@
                   "Value": "true"
                 }
               }
+            },
+            "gridlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.2
+                    }
+                  }
+                }
+              }
+            },
+            "gridlineTransparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "30D"
+                }
+              }
             }
           }
         }
@@ -169,6 +234,13 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "labelPosition": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Auto'"
                 }
               }
             }
@@ -197,7 +269,157 @@
                   "Value": "false"
                 }
               }
+            },
+            "gridlineShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.3
+                    }
+                  }
+                }
+              }
+            },
+            "gridlineTransparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
             }
+          }
+        }
+      ],
+      "zoom": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "lineStyles": [
+        {
+          "properties": {
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "And": {
+                    "Left": {
+                      "And": {
+                        "Left": {
+                          "And": {
+                            "Left": {
+                              "Comparison": {
+                                "ComparisonKind": 0,
+                                "Left": {
+                                  "Column": {
+                                    "Expression": {
+                                      "SourceRef": {
+                                        "Entity": "LocalDateTable_437f2bfc-94b5-418a-8c7a-99294c6b459d"
+                                      }
+                                    },
+                                    "Property": "年"
+                                  }
+                                },
+                                "Right": {
+                                  "Literal": {
+                                    "Value": "2017L"
+                                  }
+                                }
+                              }
+                            },
+                            "Right": {
+                              "Comparison": {
+                                "ComparisonKind": 0,
+                                "Left": {
+                                  "Column": {
+                                    "Expression": {
+                                      "SourceRef": {
+                                        "Entity": "LocalDateTable_437f2bfc-94b5-418a-8c7a-99294c6b459d"
+                                      }
+                                    },
+                                    "Property": "季"
+                                  }
+                                },
+                                "Right": {
+                                  "Literal": {
+                                    "Value": "'季度 1'"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "Right": {
+                          "Comparison": {
+                            "ComparisonKind": 0,
+                            "Left": {
+                              "Column": {
+                                "Expression": {
+                                  "SourceRef": {
+                                    "Entity": "LocalDateTable_437f2bfc-94b5-418a-8c7a-99294c6b459d"
+                                  }
+                                },
+                                "Property": "月"
+                              }
+                            },
+                            "Right": {
+                              "Literal": {
+                                "Value": "'February'"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "Right": {
+                      "Comparison": {
+                        "ComparisonKind": 0,
+                        "Left": {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Entity": "LocalDateTable_437f2bfc-94b5-418a-8c7a-99294c6b459d"
+                              }
+                            },
+                            "Property": "日"
+                          }
+                        },
+                        "Right": {
+                          "Literal": {
+                            "Value": "11L"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       ]
@@ -228,6 +450,145 @@
             }
           }
         }
+      ],
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 5,
+                      "Percent": 0.2
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "preset": {
+              "expr": {
+                "Literal": {
+                  "Value": "'BottomRight'"
+                }
+              }
+            },
+            "angle": {
+              "expr": {
+                "Literal": {
+                  "Value": "45L"
+                }
+              }
+            },
+            "shadowDistance": {
+              "expr": {
+                "Literal": {
+                  "Value": "10L"
+                }
+              }
+            },
+            "shadowBlur": {
+              "expr": {
+                "Literal": {
+                  "Value": "10L"
+                }
+              }
+            },
+            "shadowSpread": {
+              "expr": {
+                "Literal": {
+                  "Value": "3L"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "70L"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "showTooltipFieldsOnly": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "showChartSpecificTooltips": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showActionsInTooltips": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
@@ -235,7 +596,59 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "59e6c8fa44ae60bfe080",
+        "name": "5fdccce89b2a1631e7b6",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_orders"
+              }
+            },
+            "Property": "orders_valid"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "45870ba3624ee6cf4df8",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "order_payments"
+                  }
+                },
+                "Property": "payment_value"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "05e8b15267f76596b584",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_orders"
+                  }
+                },
+                "Property": "purchased_at"
+              }
+            },
+            "Function": 3
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "f298412dbbb6881e4500",
         "field": {
           "HierarchyLevel": {
             "Expression": {
@@ -260,7 +673,7 @@
         "type": "Advanced"
       },
       {
-        "name": "d56734bbf0ea75a5acef",
+        "name": "5b6aebf97eddb8bd20b7",
         "field": {
           "HierarchyLevel": {
             "Expression": {
@@ -285,7 +698,7 @@
         "type": "Categorical"
       },
       {
-        "name": "f2ef020903c6c7ad17e2",
+        "name": "ee9e3e32a49521ec2cbd",
         "field": {
           "HierarchyLevel": {
             "Expression": {
@@ -310,7 +723,7 @@
         "type": "Categorical"
       },
       {
-        "name": "50ea0d2bc3097f5cc589",
+        "name": "da7d576302cfaeee8da4",
         "field": {
           "HierarchyLevel": {
             "Expression": {
@@ -330,20 +743,6 @@
               }
             },
             "Level": "日"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "4250569a63b638d2c6c0",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_orders"
-              }
-            },
-            "Property": "orders_valid"
           }
         },
         "type": "Advanced"

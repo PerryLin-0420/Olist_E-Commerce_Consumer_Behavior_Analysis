@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "ee81153087cb8629973f",
   "position": {
-    "x": 1290,
-    "y": 258,
-    "z": 8000,
+    "x": 1289.9999999999993,
+    "y": 271.43005181347138,
+    "z": 7000,
     "height": 549,
     "width": 606,
-    "tabOrder": 8000
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "pieChart",
@@ -27,8 +27,58 @@
                 }
               },
               "queryRef": "timecell.slot_tier",
-              "nativeQueryRef": "slot_tier 的計數",
-              "active": true
+              "nativeQueryRef": "時段等級",
+              "active": true,
+              "displayName": "時段等級"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Arithmetic": {
+                  "Left": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "order_payments"
+                            }
+                          },
+                          "Property": "payment_value"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "Right": {
+                    "ScopedEval": {
+                      "Expression": {
+                        "Aggregation": {
+                          "Expression": {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Entity": "order_payments"
+                                }
+                              },
+                              "Property": "payment_value"
+                            }
+                          },
+                          "Function": 0
+                        }
+                      },
+                      "Scope": []
+                    }
+                  },
+                  "Operator": 3
+                }
+              },
+              "queryRef": "Sum(order_payments.payment_value)",
+              "nativeQueryRef": "營收占比",
+              "displayName": "營收占比"
             }
           ]
         },
@@ -46,7 +96,8 @@
                 }
               },
               "queryRef": "v_orders.orders_valid",
-              "nativeQueryRef": "orders_valid"
+              "nativeQueryRef": "訂單數",
+              "displayName": "訂單數"
             }
           ]
         }
@@ -83,6 +134,168 @@
           }
         },
         {
+          "properties": {},
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "timecell"
+                          }
+                        },
+                        "Property": "slot_tier"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'1 黃金'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {},
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "timecell"
+                          }
+                        },
+                        "Property": "slot_tier"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'2 候選'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {},
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "timecell"
+                          }
+                        },
+                        "Property": "slot_tier"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'3 其他日間'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {},
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "timecell"
+                          }
+                        },
+                        "Property": "slot_tier"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'4 夜間'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'outside'"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#111827'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "dataPoint": [
+        {
           "properties": {
             "fill": {
               "solid": {
@@ -114,7 +327,7 @@
                     },
                     "Right": {
                       "Literal": {
-                        "Value": "'1 黃金'"
+                        "Value": "'1 Prime'"
                       }
                     }
                   }
@@ -155,7 +368,7 @@
                     },
                     "Right": {
                       "Literal": {
-                        "Value": "'2 候選'"
+                        "Value": "'2 Choice'"
                       }
                     }
                   }
@@ -170,93 +383,96 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#CBD2DC'"
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.3
                     }
                   }
                 }
               }
-            }
-          },
-          "selector": {
-            "data": [
-              {
-                "scopeId": {
-                  "Comparison": {
-                    "ComparisonKind": 0,
-                    "Left": {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Entity": "timecell"
-                          }
-                        },
-                        "Property": "slot_tier"
-                      }
-                    },
-                    "Right": {
-                      "Literal": {
-                        "Value": "'3 其他日間'"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        },
-        {
-          "properties": {
-            "fill": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E8EBF0'"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "data": [
-              {
-                "scopeId": {
-                  "Comparison": {
-                    "ComparisonKind": 0,
-                    "Left": {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Entity": "timecell"
-                          }
-                        },
-                        "Property": "slot_tier"
-                      }
-                    },
-                    "Right": {
-                      "Literal": {
-                        "Value": "'4 夜間'"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "position": {
+            },
+            "fillTransparency": {
               "expr": {
                 "Literal": {
-                  "Value": "'outside'"
+                  "Value": "10D"
                 }
               }
             }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "timecell"
+                          }
+                        },
+                        "Property": "slot_tier"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'3 Other'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.1
+                    }
+                  }
+                }
+              }
+            },
+            "fillTransparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "timecell"
+                          }
+                        },
+                        "Property": "slot_tier"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'4 Night'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       ]
@@ -281,7 +497,84 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'購買時段占比'"
+                  "Value": "'購買時段-訂單數占比'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 5,
+                      "Percent": 0.2
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.3
+                    }
+                  }
+                }
+              }
+            },
+            "preset": {
+              "expr": {
+                "Literal": {
+                  "Value": "'BottomRight'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Canvas'"
                 }
               }
             }
@@ -327,34 +620,6 @@
         },
         "type": "Advanced",
         "howCreated": "User"
-      },
-      {
-        "name": "c483a18aa133893de8cd",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "timecell"
-              }
-            },
-            "Property": "slot_tier"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "84c8e94ed35b89d45572",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_orders"
-              }
-            },
-            "Property": "orders_valid"
-          }
-        },
-        "type": "Advanced"
       }
     ]
   }

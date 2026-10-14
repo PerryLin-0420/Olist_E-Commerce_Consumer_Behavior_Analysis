@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "43ac814a3dd49f043e51",
   "position": {
-    "x": 1288,
-    "y": 24,
-    "z": 1000,
-    "height": 504,
-    "width": 608,
-    "tabOrder": 1000
+    "x": 1272.532088681447,
+    "y": 163.54725787631273,
+    "z": 0,
+    "height": 445.8343057176196,
+    "width": 622.82380396732788,
+    "tabOrder": 0
   },
   "visual": {
     "visualType": "funnel",
@@ -23,12 +23,57 @@
                       "Entity": "v_orders"
                     }
                   },
-                  "Property": "purchase_seq"
+                  "Property": "customer_tier"
                 }
               },
-              "queryRef": "v_orders.purchase_seq",
-              "nativeQueryRef": "purchase_seq 的總和",
-              "active": true
+              "queryRef": "v_orders.customer_tier",
+              "nativeQueryRef": "顧客總購買次數",
+              "active": true,
+              "displayName": "顧客總購買次數"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "v_orders"
+                        }
+                      },
+                      "Property": "customer_tier"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Min(v_orders.customer_tier)",
+              "nativeQueryRef": "顧客總購買次數1",
+              "displayName": "顧客總購買次數"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "v_orders"
+                        }
+                      },
+                      "Property": "customer_unique_id"
+                    }
+                  },
+                  "Function": 2
+                }
+              },
+              "queryRef": "Min(v_orders.customer_unique_id)",
+              "nativeQueryRef": "customer_unique_id 的計數",
+              "displayName": "顧客數占比"
             }
           ]
         },
@@ -49,7 +94,7 @@
                           "Property": "customer_unique_id"
                         }
                       },
-                      "Function": 5
+                      "Function": 2
                     }
                   },
                   "Right": {
@@ -66,7 +111,7 @@
                               "Property": "customer_unique_id"
                             }
                           },
-                          "Function": 5
+                          "Function": 2
                         }
                       },
                       "Scope": []
@@ -76,7 +121,9 @@
                 }
               },
               "queryRef": "Divide(CountNonNull(v_orders.customer_unique_id), ScopedEval(CountNonNull(v_orders.customer_unique_id), []))",
-              "nativeQueryRef": "customer_unique_id 的計數 的 %GT"
+              "nativeQueryRef": "顧客數占比",
+              "displayName": "顧客數占比",
+              "format": "0.0000%;-0.0000%;0.0000%"
             }
           ]
         }
@@ -98,7 +145,7 @@
                         "Property": "customer_unique_id"
                       }
                     },
-                    "Function": 5
+                    "Function": 2
                   }
                 },
                 "Right": {
@@ -115,7 +162,7 @@
                             "Property": "customer_unique_id"
                           }
                         },
-                        "Function": 5
+                        "Function": 2
                       }
                     },
                     "Scope": []
@@ -138,6 +185,19 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "percentBarLabel": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -171,6 +231,125 @@
             }
           }
         }
+      ],
+      "border": [
+        {
+          "properties": {
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 5,
+                      "Percent": 0.2
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "preset": {
+              "expr": {
+                "Literal": {
+                  "Value": "'BottomRight'"
+                }
+              }
+            },
+            "angle": {
+              "expr": {
+                "Literal": {
+                  "Value": "45L"
+                }
+              }
+            },
+            "shadowDistance": {
+              "expr": {
+                "Literal": {
+                  "Value": "10L"
+                }
+              }
+            },
+            "shadowBlur": {
+              "expr": {
+                "Literal": {
+                  "Value": "10L"
+                }
+              }
+            },
+            "shadowSpread": {
+              "expr": {
+                "Literal": {
+                  "Value": "3L"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "70L"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "showTooltipFieldsOnly": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "showChartSpecificTooltips": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
@@ -178,7 +357,84 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "3de57f499e3d14ef83db",
+        "name": "8330f53c68053a788667",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_orders"
+              }
+            },
+            "Property": "customer_tier"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "3551333148e28386c229",
+        "field": {
+          "Arithmetic": {
+            "Left": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "v_orders"
+                      }
+                    },
+                    "Property": "customer_unique_id"
+                  }
+                },
+                "Function": 2
+              }
+            },
+            "Right": {
+              "ScopedEval": {
+                "Expression": {
+                  "Aggregation": {
+                    "Expression": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "v_orders"
+                          }
+                        },
+                        "Property": "customer_unique_id"
+                      }
+                    },
+                    "Function": 2
+                  }
+                },
+                "Scope": []
+              }
+            },
+            "Operator": 3
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1618517898390de890fa",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_orders"
+                  }
+                },
+                "Property": "customer_tier"
+              }
+            },
+            "Function": 3
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "343572818df96ee2d561",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -191,11 +447,10 @@
                 "Property": "customer_unique_id"
               }
             },
-            "Function": 5
+            "Function": 2
           }
         },
-        "type": "Advanced",
-        "howCreated": "User"
+        "type": "Advanced"
       }
     ]
   }

@@ -23,6 +23,7 @@
   <a href="#etl"><b>🗄️ ETL</b></a> &nbsp;·&nbsp;
   <a href="#random-forest"><b>🌲 Random Forest</b></a> &nbsp;·&nbsp;
   <a href="#time-matrix"><b>🕒 Time Matrix</b></a> &nbsp;·&nbsp;
+  <a href="#dashboard"><b>📊 Dashboard</b></a> &nbsp;·&nbsp;
   <a href="#conclusions"><b>💡 Conclusions</b></a>
 </p>
 
@@ -36,6 +37,7 @@ An analysis of consumer behavior on the Olist store, modeling that behavior to p
   - [Usage](#etl-usage) · [Tables](#etl-tables) · [Design Notes](#etl-design) · [Known Data Issues](#etl-issues)
 - [Random Forest Segmentation](#random-forest)
 - [Time Matrix Analysis (weekday × hour)](#time-matrix)
+- [Power BI Dashboard](#dashboard)
 - [Conclusions and Recommendations](#conclusions)
   - [Inferences](#inferences) · [Recommendations](#recommendations)
 
@@ -49,6 +51,7 @@ An analysis of consumer behavior on the Olist store, modeling that behavior to p
 |---|---|
 | [EDA Findings](EDA/EDA_findings.md) | Observed patterns from the exploratory analysis, random forest and time matrix steps (phenomena only, no causal claims) |
 | [EDA Findings §9 Weekday × Hour](EDA/EDA_findings.md#9-weekday--hour) | Weekday × hour matrices, time segments and golden slots |
+| [Power BI Dashboard](#dashboard) | Two-page interactive dashboard, project files and download |
 
 <a id="etl"></a>
 
@@ -161,6 +164,41 @@ time_matrix\Auto_TM.bat
 | 05 | `05_golden_hours.py` | Golden slots inside T1: 1,000 week-block bootstraps of each slot's chance of ranking in the top quarter by revenue per week, checked by split halves and by period |
 
 Outputs: `time_matrix/outputs/`, `time_matrix/charts/`.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+<a id="dashboard"></a>
+
+## 📊 Power BI Dashboard
+
+An interactive Power BI dashboard on the same data (imported from BigQuery), in two pages. Colours are consistent across pages: blue = consumers, red = sellers, orange = golden time slots.
+
+<img src="docs/dashboard_time.png" alt="Time dashboard" width="900">
+
+<img src="docs/dashboard_geo.png" alt="Geographic dashboard" width="900">
+
+| Page | Visuals | Question |
+|---|---|---|
+| **Time_Dashboard** | Slicers (year-month, consumer state, customer type), KPI cards (orders, revenue, average order value, repeat rate), weekday × hour heat matrix, golden-slot matrix, slot share pie, daily timeline | What time do people buy? |
+| **Map&Repurchase_Dashboard** | Consumer spend map, repeat-consumer map, repeat funnel by purchase days, seller map, seller orders map, share of sellers with repeat customers | Who buys, where, and where do customers come back? |
+
+### Files and how to open
+
+| File | Content | Where |
+|---|---|---|
+| `EDA/dashboard.pbip` (+ `dashboard.Report/`, `dashboard.SemanticModel/`) | Report and model as text files, **no data** | this repo |
+| `dashboard.pbix` | Report, model and **a data snapshot** | [Releases](https://github.com/PerryLin-0420/Olist_E-Commerce_Consumer_Behavior_Analysis/releases) |
+
+- **pbix**: open with Power BI Desktop (Windows); no BigQuery access needed.
+- **pbip**: open `dashboard.pbip` in Power BI Desktop, then Refresh. Refresh asks for a Google account that can read the BigQuery dataset, so it works only for people who were granted access.
+
+### Model notes
+
+- Tables: the 9 Olist tables, the view `v_orders` (one row per order), `timecell` (168 weekday × hour slots) and a threshold table used by the seller map.
+- Measures: `orders_valid` (excludes canceled and unavailable orders), `revenue_valid`, `aov`, `repeat_rate`, `repeat_customers`, and a seller repeat rate that counts only sellers with ≥ N customers.
+- **Golden slots in Power BI** are a rank-based approximation of the bootstrap result above: slots ranked 1–9 by revenue are golden (the same 9 slots as in [EDA Findings](EDA/EDA_findings.md#9-weekday--hour)), ranks 10–30 are candidates. The 95% bootstrap confidence is not recomputed in DAX.
+- **Repeat** means a customer with purchases on ≥ 2 different dates (2.24% of customers, SP 966 of 40,302). On the seller map it means the same customer bought from the same seller on ≥ 2 dates.
+- Reconciliation with the Python analysis: 98,207 orders vs 98,206 (one order differs), golden slots 9,529 orders (9.7%).
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

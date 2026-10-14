@@ -5,12 +5,6 @@ table sellers
 		formatString: 0
 		lineageTag: 149224c3-7dbb-489f-bc26-8960f33d4c7d
 
-	measure repeate_customers =
-			CALCULATE(
-			    DISTINCT(customers[customer_unique_id]),
-			    )
-		lineageTag: 01cf23f2-13de-40be-9297-169e132b00a2
-
 	column seller_id
 		dataType: string
 		lineageTag: 77bebb01-7a92-48f4-81a3-8b9b78fc81f5

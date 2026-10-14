@@ -35,6 +35,23 @@ table v_orders
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	measure orders_text = FORMAT ( [orders_valid], "#,0" )
+		lineageTag: c28a7996-eae7-4d2f-a1b1-008c5b39e304
+
+	measure purchase+seq_color = SQRT([purchase_seq_color])
+		lineageTag: 3c252321-eee4-4b27-aa82-24bc763a7665
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure repeat_customers =
+			
+			CALCULATE (
+			    DISTINCTCOUNT ( v_orders[customer_unique_id] ),
+			    v_orders[purchase_days] >= 2
+			)
+		formatString: 0
+		lineageTag: bab617df-d09f-4010-b2c8-67a47010ef90
+
 	column order_id
 		dataType: string
 		lineageTag: 39217473-c18d-41b2-9109-003604f7b10c

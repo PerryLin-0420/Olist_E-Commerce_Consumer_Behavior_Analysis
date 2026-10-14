@@ -23,6 +23,7 @@
   <a href="#etl"><b>🗄️ ETL</b></a> &nbsp;·&nbsp;
   <a href="#random-forest"><b>🌲 隨機森林</b></a> &nbsp;·&nbsp;
   <a href="#time-matrix"><b>🕒 時間矩陣</b></a> &nbsp;·&nbsp;
+  <a href="#dashboard"><b>📊 儀表板</b></a> &nbsp;·&nbsp;
   <a href="#conclusions"><b>💡 推論與建議</b></a>
 </p>
 
@@ -36,6 +37,7 @@
   - [執行方式](#etl-usage) · [資料表](#etl-tables) · [設計說明](#etl-design) · [已知資料問題](#etl-issues)
 - [隨機森林分群](#random-forest)
 - [時間矩陣分析（星期 × 小時）](#time-matrix)
+- [Power BI 儀表板](#dashboard)
 - [推論與建議](#conclusions)
   - [推論](#inferences) · [建議](#recommendations)
 
@@ -49,6 +51,7 @@
 |---|---|
 | [EDA 發現](EDA_findings.zh-TW.md) | 探索式分析、隨機森林與時間矩陣步驟觀察到的現象（只描述現象，不推論因果） |
 | [EDA 發現 §9 星期 × 小時](EDA_findings.zh-TW.md#9-星期--小時-weekday--hour) | 星期 × 小時矩陣、時段分群與黃金時段 |
+| [Power BI 儀表板](#dashboard) | 兩頁互動式儀表板、專案檔與下載方式 |
 
 <a id="etl"></a>
 
@@ -161,6 +164,41 @@ time_matrix\Auto_TM.bat
 | 05 | `05_golden_hours.py` | T1 內的黃金時段：以 1,000 次整週重抽計算每個時段以每週營收進入前 25% 的機率，並以奇偶週與各時期檢驗 |
 
 輸出：`time_matrix/outputs/`、`time_matrix/charts/`。
+
+<p align="right"><a href="#top">↑ 回到頂端</a></p>
+
+<a id="dashboard"></a>
+
+## 📊 Power BI 儀表板 (Dashboard)
+
+以同一份資料（由 BigQuery 匯入）做成的互動式 Power BI 儀表板，共兩頁。配色在兩頁一致：藍色 = 消費者端，紅色 = 賣家端，橘色 = 黃金時段。
+
+<img src="dashboard_time.png" alt="時間儀表板" width="900">
+
+<img src="dashboard_geo.png" alt="地區儀表板" width="900">
+
+| 頁面 | 內容 | 回答的問題 |
+|---|---|---|
+| **Time_Dashboard** | 切片器（年月、消費者州、顧客類型）、KPI 卡片（訂單數、營收、客單價、回購率）、星期 × 小時熱力矩陣、黃金時段矩陣、時段占比圓餅圖、每日時間線 | 什麼時候買？ |
+| **Map&Repurchase_Dashboard** | 消費額地圖、回購消費者地圖、依購買日數的回購長條圖、賣家分布地圖、賣家訂單數地圖、有回頭客的賣家比例地圖 | 誰在買、在哪裡買、哪裡留得住客人？ |
+
+### 檔案與開啟方式
+
+| 檔案 | 內容 | 位置 |
+|---|---|---|
+| [`EDA/dashboard.pbip`](../EDA/dashboard.pbip)（含 `dashboard.Report/`、`dashboard.SemanticModel/`） | 報表與資料模型的文字檔，**不含資料** | 本專案 |
+| `dashboard.pbix` | 報表、模型與**資料快照** | [Releases](https://github.com/PerryLin-0420/Olist_E-Commerce_Consumer_Behavior_Analysis/releases) |
+
+- **pbix**：用 Power BI Desktop（Windows）開啟，不需要 BigQuery 權限。
+- **pbip**：用 Power BI Desktop 開啟 `dashboard.pbip`，再按「重新整理」。重新整理會要求登入 Google 帳號，且該帳號要有 BigQuery 資料集的讀取權限，沒有被授權的人無法重新整理。
+
+### 模型說明
+
+- 資料表：Olist 的 9 張表、每筆訂單一列的檢視 `v_orders`、168 個「星期 × 小時」時段的 `timecell`，以及賣家地圖用的門檻表。
+- 量值：`orders_valid`（排除已取消與不可用訂單）、`revenue_valid`、`aov`、`repeat_rate`、`repeat_customers`，以及只計入顧客數 ≥ N 的賣家的回頭客比例。
+- **Power BI 裡的黃金時段**是上面 bootstrap 結果的名次近似：每週營收第 1–9 名為黃金（與 [EDA 發現](EDA_findings.zh-TW.md#9-星期--小時-weekday--hour) 的 9 個時段相同），第 10–30 名為候選；DAX 裡不重算 95% 的重抽機率。
+- **回頭客**指在 ≥ 2 個不同日期購買的顧客（占顧客 2.24%，SP 為 40,302 位中的 966 位）；賣家地圖上則是同一位顧客在同一家賣家買過 ≥ 2 個日期。
+- 與 Python 分析的對帳：訂單數 98,207 vs 98,206（差 1 筆），黃金時段 9,529 筆訂單（9.7%）。
 
 <p align="right"><a href="#top">↑ 回到頂端</a></p>
 

@@ -33,6 +33,19 @@
           }
         }
       }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "true"
+              }
+            }
+          }
+        }
+      }
     ]
   },
   "resourcePackages": [
@@ -60,6 +73,11 @@
           "name": "ModernLight.json",
           "path": "ModernLight.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "Olist530504803860661.jpg",
+          "path": "Olist530504803860661.jpg",
+          "type": "Image"
         }
       ]
     }
