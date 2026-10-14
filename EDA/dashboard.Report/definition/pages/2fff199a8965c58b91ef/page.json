@@ -1,0 +1,29 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "2fff199a8965c58b91ef",
+  "displayName": "Map&Repurchase_Dashboard",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "pageBinding": {
+    "name": "2aed00a9cfb7729ac664",
+    "type": "Default",
+    "parameters": [],
+    "referenceScope": "CrossReport"
+  },
+  "objects": {
+    "outspacePane": [
+      {
+        "properties": {
+          "width": {
+            "expr": {
+              "Literal": {
+                "Value": "191L"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

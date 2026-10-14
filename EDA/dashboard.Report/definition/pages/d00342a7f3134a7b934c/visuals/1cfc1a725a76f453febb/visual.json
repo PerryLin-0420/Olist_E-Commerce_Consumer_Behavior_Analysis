@@ -1,0 +1,89 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "1cfc1a725a76f453febb",
+  "position": {
+    "x": 498,
+    "y": 138,
+    "z": 9001,
+    "height": 108,
+    "width": 450,
+    "tabOrder": 9001
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_orders"
+                    }
+                  },
+                  "Property": "revenue_valid"
+                }
+              },
+              "queryRef": "v_orders.revenue_valid",
+              "nativeQueryRef": "revenue_valid"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_orders"
+                  }
+                },
+                "Property": "revenue_valid"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "lockAspect": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "34a7e2ed553adff1c8c3",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_orders"
+              }
+            },
+            "Property": "revenue_valid"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

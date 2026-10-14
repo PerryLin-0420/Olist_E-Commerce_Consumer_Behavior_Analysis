@@ -1,0 +1,85 @@
+table order_reviews
+	lineageTag: 63045a9b-e9f7-4a09-9d4f-ca6e31aaf0db
+
+	column review_id
+		dataType: string
+		lineageTag: 2c013a33-42c9-49ad-bbbb-fb98cdfc3256
+		summarizeBy: none
+		sourceColumn: review_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_id
+		dataType: string
+		lineageTag: f443149b-e9b2-4ed7-a347-39ae99c1fd8b
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_score
+		dataType: int64
+		formatString: 0
+		lineageTag: c8195354-ab99-4622-abba-d3110df794f3
+		summarizeBy: sum
+		sourceColumn: review_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_title
+		dataType: string
+		lineageTag: ec6065cb-b103-460b-a40c-6e986245a9c6
+		summarizeBy: none
+		sourceColumn: review_comment_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_message
+		dataType: string
+		lineageTag: b779fd72-12cc-46c2-b076-06334a0f515c
+		summarizeBy: none
+		sourceColumn: review_comment_message
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_creation_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5fbc64b7-db01-4c5f-9783-f37c05892d7a
+		summarizeBy: none
+		sourceColumn: review_creation_date
+
+		variation 變化
+			isDefault
+			relationship: 4d1ccf70-0db1-4d5c-b306-6b44af6a4240
+			defaultHierarchy: LocalDateTable_37abd475-9218-41b7-9e26-45cd97eeb08b.日期階層
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_answer_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e47307c4-a374-4a6d-bd35-a773b050e4b0
+		summarizeBy: none
+		sourceColumn: review_answer_timestamp
+
+		variation 變化
+			isDefault
+			relationship: ce4605f5-9e51-434f-8375-ca5e0030a2c8
+			defaultHierarchy: LocalDateTable_7b2f69c9-0a5a-4a20-ab6a-1fc7f0cfbf5f.日期階層
+
+		annotation SummarizationSetBy = Automatic
+
+	partition order_reviews = m
+		mode: import
+		source =
+				let
+				    來源 = GoogleBigQuery.Database([Implementation="2.0", BillingProject="olist-511414"]),
+				    #"olist-511414_Database" = 來源{[Name="olist-511414",Kind="Database"]}[Data],
+				    olist_Schema = #"olist-511414_Database"{[Name="olist",Kind="Schema"]}[Data],
+				    order_reviews_Table = olist_Schema{[Name="order_reviews",Kind="Table"]}[Data]
+				in
+				    order_reviews_Table
+
+	annotation PBI_ResultType = Table
+

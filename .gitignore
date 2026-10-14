@@ -229,3 +229,8 @@ EDA/charts/*.tmp.png
 
 # Random forest feature tables (rebuilt by random_forest/Auto_RF.bat)
 random_forest/features/
+
+# Power BI: keep the binary report and local-only files out of git
+EDA/dashboard.pbix
+**/.pbi/localSettings.json
+**/.pbi/cache.abf

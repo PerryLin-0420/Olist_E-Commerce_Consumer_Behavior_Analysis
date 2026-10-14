@@ -1,0 +1,72 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "336d9ed88f8bc28d6551",
+  "position": {
+    "x": 648,
+    "y": 66,
+    "z": 6000,
+    "height": 60,
+    "width": 600,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "listSlicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_orders"
+                    }
+                  },
+                  "Property": "customer_state"
+                }
+              },
+              "queryRef": "v_orders.customer_state",
+              "nativeQueryRef": "customer_state",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "lockAspect": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "57cec9633071a220e664",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_orders"
+              }
+            },
+            "Property": "customer_state"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

@@ -1,0 +1,199 @@
+table v_orders
+	lineageTag: bf5e1892-1a77-4b64-84a1-d222a2307fcb
+
+	measure orders_valid =
+			
+			CALCULATE (
+			    DISTINCTCOUNT ( v_orders[order_id] ),
+			    NOT ( v_orders[order_status] IN { "canceled", "unavailable" } )
+			)
+		formatString: 0
+		lineageTag: b8bf4bc3-1e4d-4ae6-9b5f-dd7085b9a203
+
+	measure revenue_valid =
+			
+			CALCULATE (
+			    SUM ( v_orders[payment_value] ),
+			    NOT ( v_orders[order_status] IN { "canceled", "unavailable" } )
+			)
+		lineageTag: 55bef6aa-2a59-45ab-8431-19b6737fe2b8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure aov = DIVIDE ( [revenue_valid], [orders_valid] )
+		lineageTag: 90b2feda-9cdd-43a1-9298-87bda565e314
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure repeat_rate =
+			
+			DIVIDE (
+			    CALCULATE ( DISTINCTCOUNT ( v_orders[customer_unique_id] ), v_orders[purchase_days] >= 2 ),
+			    DISTINCTCOUNT ( v_orders[customer_unique_id] )
+			)
+		lineageTag: da5babaf-8e22-4019-ab9c-496a28183adc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column order_id
+		dataType: string
+		lineageTag: 39217473-c18d-41b2-9109-003604f7b10c
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_unique_id
+		dataType: string
+		lineageTag: f9bcbc84-159b-4a92-a1b2-d27e20bb6a6f
+		summarizeBy: none
+		sourceColumn: customer_unique_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_state
+		dataType: string
+		lineageTag: 871891b1-8c71-49a1-a9db-08713415456c
+		summarizeBy: none
+		sourceColumn: customer_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		lineageTag: 687887dc-5d33-4f2f-a509-cd9cce5a3872
+		summarizeBy: none
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchased_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 30b34a5b-77b6-4ad1-bfba-57e192980209
+		summarizeBy: none
+		sourceColumn: purchased_at
+
+		variation 變化
+			isDefault
+			relationship: 3a041037-302d-466d-b866-913b20cb7d9d
+			defaultHierarchy: LocalDateTable_437f2bfc-94b5-418a-8c7a-99294c6b459d.日期階層
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_value
+		dataType: double
+		lineageTag: e50fc080-f0f7-4e05-b6af-81d6b54655b0
+		summarizeBy: sum
+		sourceColumn: payment_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column orders =
+			CALCULATE(
+			    DISTINCTCOUNT(order_payments[order_id]),
+			    ALLEXCEPT(order_payments, v_orders[customer_unique_id])
+			)
+		formatString: 0
+		lineageTag: 959e6740-9092-44b4-bd5b-1ad10ab2b3cc
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_seq = ```
+			
+			 VAR d = INT ( v_orders[purchased_at])
+			 VAR custdate = 
+			    CALCULATETABLE(
+			        SELECTCOLUMNS(v_orders, "purchase_date", INT( v_orders[purchased_at])),
+			        ALLEXCEPT(v_orders, v_orders[customer_unique_id])
+			    )
+			 RETURN
+			COUNTROWS(FILTER(DISTINCT(custdate), [purchase_date] <= d))
+			```
+		formatString: 0
+		lineageTag: da8c60cc-e235-450d-8fb1-423ebad1eb19
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column weekday_no = WEEKDAY(v_orders[purchased_at],2)
+		formatString: 0
+		lineageTag: 731a1286-95dd-4183-95d0-6b5fa1aba463
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column weekday_name = FORMAT(v_orders[purchased_at],"ddd")
+		lineageTag: 2a21c43f-3885-4863-bfd7-21b5d79f9454
+		summarizeBy: none
+		sortByColumn: weekday_no
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour = HOUR(v_orders[purchased_at])
+		formatString: 0
+		lineageTag: 0f2704ee-ebfa-4b13-9a6c-79d9eb1842e5
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column cell = (WEEKDAY(v_orders[purchased_at],2)-1)*24+HOUR(v_orders[purchased_at])
+		formatString: 0
+		lineageTag: f38da834-ee81-4cbb-986c-7321c71bd3be
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month = FORMAT ( v_orders[purchased_at], "YYYY-MM" )
+		lineageTag: 299b7742-e99c-44c3-9e05-73adee009cec
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_days =
+			
+			VAR custDates =
+			    CALCULATETABLE (
+			        SELECTCOLUMNS ( v_orders, "purchase_date", INT ( v_orders[purchased_at] ) ),
+			        ALLEXCEPT ( v_orders, v_orders[customer_unique_id] )
+			    )
+			RETURN
+			    COUNTROWS ( DISTINCT ( custDates ) )
+		formatString: 0
+		lineageTag: c4b3a4a6-f0e0-4cc4-9a8e-1c3ae639147e
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_tier =
+			
+			SWITCH (
+			    TRUE (),
+			    v_orders[purchase_days] = 1, "1 次",
+			    v_orders[purchase_days] = 2, "2 次",
+			    v_orders[purchase_days] = 3, "3 次",
+			    "4 次以上"
+			)
+		lineageTag: 4c7b63f6-538c-4030-a736-ffa556377942
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_orders = m
+		mode: import
+		source =
+				let
+				    來源 = GoogleBigQuery.Database([Implementation="2.0", BillingProject="olist-511414"]),
+				    #"olist-511414_Database" = 來源{[Name="olist-511414",Kind="Database"]}[Data],
+				    olist_Schema = #"olist-511414_Database"{[Name="olist",Kind="Schema"]}[Data],
+				    v_orders_View = olist_Schema{[Name="v_orders",Kind="View"]}[Data]
+				in
+				    v_orders_View
+
+	annotation PBI_ResultType = Table
+

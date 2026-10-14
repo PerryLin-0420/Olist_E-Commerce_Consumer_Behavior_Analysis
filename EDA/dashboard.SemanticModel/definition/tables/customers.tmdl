@@ -1,0 +1,56 @@
+table customers
+	lineageTag: 41758660-eace-4905-98c3-3a13cefcc3ac
+
+	column customer_id
+		dataType: string
+		lineageTag: a7a87ca8-1c16-4728-be72-5eeba34c5127
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_unique_id
+		dataType: string
+		lineageTag: c69b458d-6233-4cbf-9dad-851a42e6fe3b
+		summarizeBy: none
+		sourceColumn: customer_unique_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_zip_code_prefix
+		dataType: string
+		lineageTag: 12c45c93-03a2-4bd2-a862-81352fe40596
+		summarizeBy: none
+		sourceColumn: customer_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_city
+		dataType: string
+		lineageTag: c5e7e068-8853-43d3-b5c9-f37901d86ab9
+		summarizeBy: none
+		sourceColumn: customer_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_state
+		dataType: string
+		lineageTag: 3d03ed0d-d118-401a-a897-7edff5681c72
+		summarizeBy: none
+		sourceColumn: customer_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition customers = m
+		mode: import
+		source =
+				let
+				    來源 = GoogleBigQuery.Database([Implementation="2.0", BillingProject="olist-511414"]),
+				    #"olist-511414_Database" = 來源{[Name="olist-511414",Kind="Database"]}[Data],
+				    olist_Schema = #"olist-511414_Database"{[Name="olist",Kind="Schema"]}[Data],
+				    customers_Table = olist_Schema{[Name="customers",Kind="Table"]}[Data]
+				in
+				    customers_Table
+
+	annotation PBI_ResultType = Table
+

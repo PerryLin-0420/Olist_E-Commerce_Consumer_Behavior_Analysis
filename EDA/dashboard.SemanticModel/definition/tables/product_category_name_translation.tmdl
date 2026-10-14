@@ -1,0 +1,32 @@
+table product_category_name_translation
+	lineageTag: 7b39e304-2e46-451e-8a4e-9e5643587a2a
+
+	column string_field_0
+		dataType: string
+		lineageTag: b598de97-4813-4b07-8321-52a4da65effb
+		summarizeBy: none
+		sourceColumn: string_field_0
+
+		annotation SummarizationSetBy = Automatic
+
+	column string_field_1
+		dataType: string
+		lineageTag: 177f7fee-e93e-408a-bc49-90d8e7fd4b40
+		summarizeBy: none
+		sourceColumn: string_field_1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition product_category_name_translation = m
+		mode: import
+		source =
+				let
+				    來源 = GoogleBigQuery.Database([Implementation="2.0", BillingProject="olist-511414"]),
+				    #"olist-511414_Database" = 來源{[Name="olist-511414",Kind="Database"]}[Data],
+				    olist_Schema = #"olist-511414_Database"{[Name="olist",Kind="Schema"]}[Data],
+				    product_category_name_translation_Table = olist_Schema{[Name="product_category_name_translation",Kind="Table"]}[Data]
+				in
+				    product_category_name_translation_Table
+
+	annotation PBI_ResultType = Table
+

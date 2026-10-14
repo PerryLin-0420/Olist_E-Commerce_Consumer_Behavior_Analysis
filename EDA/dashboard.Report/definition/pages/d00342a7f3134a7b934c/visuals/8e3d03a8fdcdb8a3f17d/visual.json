@@ -1,0 +1,89 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "8e3d03a8fdcdb8a3f17d",
+  "position": {
+    "x": 972,
+    "y": 138,
+    "z": 9002,
+    "height": 108,
+    "width": 450,
+    "tabOrder": 9002
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_orders"
+                    }
+                  },
+                  "Property": "aov"
+                }
+              },
+              "queryRef": "v_orders.aov",
+              "nativeQueryRef": "aov"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_orders"
+                  }
+                },
+                "Property": "aov"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "lockAspect": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c1762b0b3c4a865b9ca0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_orders"
+              }
+            },
+            "Property": "aov"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

@@ -1,0 +1,361 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "8258a7d2c49b186455ed",
+  "position": {
+    "x": 24,
+    "y": 537,
+    "z": 3000,
+    "height": 270,
+    "width": 1245,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "timecell"
+                    }
+                  },
+                  "Property": "hr"
+                }
+              },
+              "queryRef": "timecell.hr",
+              "nativeQueryRef": "hr",
+              "active": true
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "timecell"
+                    }
+                  },
+                  "Property": "wd_name"
+                }
+              },
+              "queryRef": "timecell.wd_name",
+              "nativeQueryRef": "wd_name",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "v_orders"
+                        }
+                      },
+                      "Property": "order_id"
+                    }
+                  },
+                  "Function": 2
+                }
+              },
+              "queryRef": "Min(v_orders.order_id)",
+              "nativeQueryRef": "order_id 的計數1"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "subTotals": [
+        {
+          "properties": {
+            "columnSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Conditional": {
+                      "Cases": [
+                        {
+                          "Condition": {
+                            "And": {
+                              "Left": {
+                                "Comparison": {
+                                  "ComparisonKind": 2,
+                                  "Left": {
+                                    "Aggregation": {
+                                      "Expression": {
+                                        "Column": {
+                                          "Expression": {
+                                            "SourceRef": {
+                                              "Entity": "timecell"
+                                            }
+                                          },
+                                          "Property": "revenue_rank"
+                                        }
+                                      },
+                                      "Function": 3
+                                    }
+                                  },
+                                  "Right": {
+                                    "Literal": {
+                                      "Value": "10D"
+                                    }
+                                  }
+                                }
+                              },
+                              "Right": {
+                                "Comparison": {
+                                  "ComparisonKind": 4,
+                                  "Left": {
+                                    "Aggregation": {
+                                      "Expression": {
+                                        "Column": {
+                                          "Expression": {
+                                            "SourceRef": {
+                                              "Entity": "timecell"
+                                            }
+                                          },
+                                          "Property": "revenue_rank"
+                                        }
+                                      },
+                                      "Function": 3
+                                    }
+                                  },
+                                  "Right": {
+                                    "Literal": {
+                                      "Value": "30D"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#9EC5F4'"
+                            }
+                          }
+                        },
+                        {
+                          "Condition": {
+                            "And": {
+                              "Left": {
+                                "Comparison": {
+                                  "ComparisonKind": 2,
+                                  "Left": {
+                                    "Aggregation": {
+                                      "Expression": {
+                                        "Column": {
+                                          "Expression": {
+                                            "SourceRef": {
+                                              "Entity": "timecell"
+                                            }
+                                          },
+                                          "Property": "revenue_rank"
+                                        }
+                                      },
+                                      "Function": 3
+                                    }
+                                  },
+                                  "Right": {
+                                    "Literal": {
+                                      "Value": "1D"
+                                    }
+                                  }
+                                }
+                              },
+                              "Right": {
+                                "Comparison": {
+                                  "ComparisonKind": 4,
+                                  "Left": {
+                                    "Aggregation": {
+                                      "Expression": {
+                                        "Column": {
+                                          "Expression": {
+                                            "SourceRef": {
+                                              "Entity": "timecell"
+                                            }
+                                          },
+                                          "Property": "revenue_rank"
+                                        }
+                                      },
+                                      "Function": 3
+                                    }
+                                  },
+                                  "Right": {
+                                    "Literal": {
+                                      "Value": "9D"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "Value": {
+                            "Literal": {
+                              "Value": "'#EB6834'"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "Min(v_orders.order_id)"
+          }
+        },
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "layout": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Compact'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rowHeaders": [
+        {
+          "properties": {
+            "repeatRowHeaders": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "3bd6c33c6ae86684c3ab",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_orders"
+                  }
+                },
+                "Property": "order_id"
+              }
+            },
+            "Function": 2
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "b04cf333cbc645668107",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "timecell"
+              }
+            },
+            "Property": "hr"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "e654c76c390dd8ffa53b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "timecell"
+              }
+            },
+            "Property": "wd_name"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

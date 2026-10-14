@@ -1,0 +1,202 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "43ac814a3dd49f043e51",
+  "position": {
+    "x": 1288,
+    "y": 24,
+    "z": 1000,
+    "height": 504,
+    "width": 608,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "funnel",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_orders"
+                    }
+                  },
+                  "Property": "purchase_seq"
+                }
+              },
+              "queryRef": "v_orders.purchase_seq",
+              "nativeQueryRef": "purchase_seq 的總和",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Arithmetic": {
+                  "Left": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "v_orders"
+                            }
+                          },
+                          "Property": "customer_unique_id"
+                        }
+                      },
+                      "Function": 5
+                    }
+                  },
+                  "Right": {
+                    "ScopedEval": {
+                      "Expression": {
+                        "Aggregation": {
+                          "Expression": {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Entity": "v_orders"
+                                }
+                              },
+                              "Property": "customer_unique_id"
+                            }
+                          },
+                          "Function": 5
+                        }
+                      },
+                      "Scope": []
+                    }
+                  },
+                  "Operator": 3
+                }
+              },
+              "queryRef": "Divide(CountNonNull(v_orders.customer_unique_id), ScopedEval(CountNonNull(v_orders.customer_unique_id), []))",
+              "nativeQueryRef": "customer_unique_id 的計數 的 %GT"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Arithmetic": {
+                "Left": {
+                  "Aggregation": {
+                    "Expression": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "v_orders"
+                          }
+                        },
+                        "Property": "customer_unique_id"
+                      }
+                    },
+                    "Function": 5
+                  }
+                },
+                "Right": {
+                  "ScopedEval": {
+                    "Expression": {
+                      "Aggregation": {
+                        "Expression": {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Entity": "v_orders"
+                              }
+                            },
+                            "Property": "customer_unique_id"
+                          }
+                        },
+                        "Function": 5
+                      }
+                    },
+                    "Scope": []
+                  }
+                },
+                "Operator": 3
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'回購率BY平台'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "3de57f499e3d14ef83db",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_orders"
+                  }
+                },
+                "Property": "customer_unique_id"
+              }
+            },
+            "Function": 5
+          }
+        },
+        "type": "Advanced",
+        "howCreated": "User"
+      }
+    ]
+  }
+}

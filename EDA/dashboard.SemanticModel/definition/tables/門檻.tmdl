@@ -1,0 +1,26 @@
+table 門檻
+	lineageTag: 60a0df26-9104-4016-aa30-c16816f7c75c
+
+	measure '門檻 值' = SELECTEDVALUE('門檻'[門檻])
+		formatString: 0
+		lineageTag: 0c3e379d-2b7c-4d64-9258-17b619820eac
+
+	column 門檻
+		formatString: 0
+		lineageTag: c5a5ec9c-9804-4d9f-9311-329cf970cec7
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 門檻 = calculated
+		mode: import
+		source = GENERATESERIES(1, 100, 1)
+
+	annotation PBI_Id = 42041c488c384ea880af7cc66a60751f
+

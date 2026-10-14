@@ -1,0 +1,146 @@
+table order_items
+	lineageTag: 91a74103-c31b-49db-b1f4-44bbd62223b4
+
+	measure seller_with_repeate =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(order_items[seller_id]),
+			    order_items[seller_cust_days]>=2
+			    )
+		formatString: 0
+		lineageTag: dc80bfb5-056e-4934-bd91-7e9c6791bddc
+
+	measure seller_repeate_rate =
+			
+			DIVIDE([seller_with_repeate], DISTINCTCOUNT(order_items[seller_id]))
+		lineageTag: 92f2ede2-8006-4f3d-ae8b-9eebdf5c7c6d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column order_id
+		dataType: string
+		lineageTag: 9f03a97d-e348-4b3e-8067-045454e690ad
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_item_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4a29e2fe-95c4-4b21-bd9b-35ece81b1c4f
+		summarizeBy: sum
+		sourceColumn: order_item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: e31e7f01-0de6-4280-a021-23be252a7935
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		lineageTag: 6e044528-5d40-4945-a3c9-5a47172665a1
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipping_limit_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 38c5ff05-13f9-4abe-ba87-71efbbb91476
+		summarizeBy: none
+		sourceColumn: shipping_limit_date
+
+		variation 變化
+			isDefault
+			relationship: 190b8e4f-098f-4dfa-a247-e10bcdffa041
+			defaultHierarchy: LocalDateTable_410fe679-c2f8-47a6-a667-0d59ca154137.日期階層
+
+		annotation SummarizationSetBy = Automatic
+
+	column price
+		dataType: double
+		lineageTag: 4d9e9698-b593-4609-82cf-1c0cb4f27416
+		summarizeBy: sum
+		sourceColumn: price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column freight_value
+		dataType: double
+		lineageTag: ecf79f78-6a66-473c-ad2d-74e3614e734a
+		summarizeBy: sum
+		sourceColumn: freight_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column customer_id = RELATED(customers[customer_unique_id])
+		lineageTag: b41f89a9-aa9a-4754-9f8f-672d80515000
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_state = RELATED(sellers[seller_state])
+		lineageTag: 9dceb2f5-4552-4b49-b593-495620c033f2
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column buy_date =
+			
+			IF(
+			    RELATED(orders[order_status]) IN {"canceled", "unavailable"},
+			    BLANK(),
+			    INT(RELATED(v_orders[purchased_at]))
+			    )
+		formatString: 0
+		lineageTag: df1be98c-8061-4e8a-b20a-91d2c8e50570
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_cust_days =
+			CALCULATE(
+			    DISTINCTCOUNTNOBLANK(order_items[buy_date]),
+			    ALLEXCEPT(order_items, order_items[seller_id], order_items[customer_id])
+			)
+		formatString: 0
+		lineageTag: fca99389-5f4c-40ee-b19d-c88e8e48343d
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_customer =
+			CALCULATE(
+			    DISTINCTCOUNT(order_items[customer_id]),
+			    ALLEXCEPT(order_items, sellers[seller_id])
+			    )
+		formatString: 0
+		lineageTag: 67c7a3e6-a215-4b57-a760-203226079b26
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition order_items = m
+		mode: import
+		source =
+				let
+				    來源 = GoogleBigQuery.Database([Implementation="2.0", BillingProject="olist-511414"]),
+				    #"olist-511414_Database" = 來源{[Name="olist-511414",Kind="Database"]}[Data],
+				    olist_Schema = #"olist-511414_Database"{[Name="olist",Kind="Schema"]}[Data],
+				    order_items_Table = olist_Schema{[Name="order_items",Kind="Table"]}[Data]
+				in
+				    order_items_Table
+
+	annotation PBI_ResultType = Table
+

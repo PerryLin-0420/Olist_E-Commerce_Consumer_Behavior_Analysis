@@ -1,0 +1,110 @@
+table timecell
+	lineageTag: 5662ce70-4e0f-4bea-9ba7-b8494f3fd9f1
+
+	column wd
+		formatString: 0
+		lineageTag: bde6559f-8e45-4160-8788-c273f9fb7464
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [wd]
+
+		annotation SummarizationSetBy = Automatic
+
+	column hr
+		formatString: 0
+		lineageTag: 838179a4-44ac-40da-a77f-22ea69300388
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [hr]
+
+		annotation SummarizationSetBy = Automatic
+
+	column cell
+		formatString: 0
+		lineageTag: 011e4d76-578a-430b-b902-ec61fcd9a32f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [cell]
+
+		annotation SummarizationSetBy = Automatic
+
+	column orders
+		formatString: 0
+		lineageTag: 4793ea53-aa99-4eb5-b630-7473589f9cc5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [orders]
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue
+		lineageTag: d5d2c6e5-3c56-4304-8eae-c2073812fe85
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [revenue]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column revenue_rank =
+			
+			RANKX(ALL(timecell),timecell[revenue],,DESC,Dense)
+		formatString: 0
+		lineageTag: 64847bb9-8415-4eb0-8231-4e5184368e42
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column slot_tier =
+			
+			SWITCH(
+			    TRUE(),
+			    timecell[revenue_rank] <= 9, "1 Prime",
+			    timecell[revenue_rank] <= 30, "2 Choice",
+			    timecell[hr] >= 1 && timecell[hr] <= 7, "4 Night",
+			    "3 Other"
+			)
+		lineageTag: 7767e2a1-1295-4cc4-82e2-8c2f77cfcd46
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column wd_name = SWITCH ( timecell[wd], 1, "Mon", 2, "Tue", 3, "Wed", 4, "Thu", 5, "Fri", 6, "Sat", 7, "Sun" )
+		lineageTag: c255c284-1ae2-4619-a27c-92f961f9b285
+		summarizeBy: none
+		sortByColumn: wd
+
+		annotation SummarizationSetBy = Automatic
+
+	partition timecell = calculated
+		mode: import
+		source = ```
+				
+				ADDCOLUMNS(
+				    CROSSJOIN(
+				        SELECTCOLUMNS(GENERATESERIES(1,7),"wd",[Value]),
+				        SELECTCOLUMNS(GENERATESERIES(0,23),"hr",[Value])
+				    ),
+				    "cell", ([wd]-1)*24+[hr],
+				    "orders",
+				        VAR c = ([wd]-1)*24+[hr]
+				        RETURN
+				        CALCULATE(
+				            DISTINCTCOUNT(v_orders[order_id]),
+				            v_orders[cell] = c,
+				            NOT (v_orders[order_status] IN { "canceled", "unavailable" } )
+				            ),
+				    "revenue", 
+				        VAR c = ([wd]-1)*24+[hr]
+				        RETURN
+				        CALCULATE(
+				            SUM(order_payments[payment_value]),
+				            v_orders[cell] = c,
+				            NOT (v_orders[order_status] IN { "canceled", "unavailable" } )
+				            )
+				)
+				```
+
+	annotation PBI_Id = df244a4518f84005b1cfc6286a39cb33
+

@@ -1,0 +1,353 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "c205c854d6b1f31b7009",
+  "position": {
+    "x": 24,
+    "y": 819,
+    "z": 0,
+    "height": 237,
+    "width": 1872,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "v_orders"
+                            }
+                          },
+                          "Name": "變化",
+                          "Property": "purchased_at"
+                        }
+                      },
+                      "Hierarchy": "日期階層"
+                    }
+                  },
+                  "Level": "年"
+                }
+              },
+              "queryRef": "v_orders.purchased_at.變化.日期階層.年",
+              "nativeQueryRef": "purchased_at 年",
+              "active": true
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "v_orders"
+                            }
+                          },
+                          "Name": "變化",
+                          "Property": "purchased_at"
+                        }
+                      },
+                      "Hierarchy": "日期階層"
+                    }
+                  },
+                  "Level": "季"
+                }
+              },
+              "queryRef": "v_orders.purchased_at.變化.日期階層.季",
+              "nativeQueryRef": "purchased_at 季",
+              "active": true
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "v_orders"
+                            }
+                          },
+                          "Name": "變化",
+                          "Property": "purchased_at"
+                        }
+                      },
+                      "Hierarchy": "日期階層"
+                    }
+                  },
+                  "Level": "月"
+                }
+              },
+              "queryRef": "v_orders.purchased_at.變化.日期階層.月",
+              "nativeQueryRef": "purchased_at 月",
+              "active": true
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "v_orders"
+                            }
+                          },
+                          "Name": "變化",
+                          "Property": "purchased_at"
+                        }
+                      },
+                      "Hierarchy": "日期階層"
+                    }
+                  },
+                  "Level": "日"
+                }
+              },
+              "queryRef": "v_orders.purchased_at.變化.日期階層.日",
+              "nativeQueryRef": "purchased_at 日",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_orders"
+                    }
+                  },
+                  "Property": "orders_valid"
+                }
+              },
+              "queryRef": "v_orders.orders_valid",
+              "nativeQueryRef": "orders_valid"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "valueAxis": [
+        {
+          "properties": {
+            "logAxisScale": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "roundRange": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "seriesLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "invertAxis": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'消費時間線'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "59e6c8fa44ae60bfe080",
+        "field": {
+          "HierarchyLevel": {
+            "Expression": {
+              "Hierarchy": {
+                "Expression": {
+                  "PropertyVariationSource": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "v_orders"
+                      }
+                    },
+                    "Name": "變化",
+                    "Property": "purchased_at"
+                  }
+                },
+                "Hierarchy": "日期階層"
+              }
+            },
+            "Level": "年"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "d56734bbf0ea75a5acef",
+        "field": {
+          "HierarchyLevel": {
+            "Expression": {
+              "Hierarchy": {
+                "Expression": {
+                  "PropertyVariationSource": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "v_orders"
+                      }
+                    },
+                    "Name": "變化",
+                    "Property": "purchased_at"
+                  }
+                },
+                "Hierarchy": "日期階層"
+              }
+            },
+            "Level": "季"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "f2ef020903c6c7ad17e2",
+        "field": {
+          "HierarchyLevel": {
+            "Expression": {
+              "Hierarchy": {
+                "Expression": {
+                  "PropertyVariationSource": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "v_orders"
+                      }
+                    },
+                    "Name": "變化",
+                    "Property": "purchased_at"
+                  }
+                },
+                "Hierarchy": "日期階層"
+              }
+            },
+            "Level": "月"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "50ea0d2bc3097f5cc589",
+        "field": {
+          "HierarchyLevel": {
+            "Expression": {
+              "Hierarchy": {
+                "Expression": {
+                  "PropertyVariationSource": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "v_orders"
+                      }
+                    },
+                    "Name": "變化",
+                    "Property": "purchased_at"
+                  }
+                },
+                "Hierarchy": "日期階層"
+              }
+            },
+            "Level": "日"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "4250569a63b638d2c6c0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_orders"
+              }
+            },
+            "Property": "orders_valid"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

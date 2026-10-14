@@ -1,0 +1,58 @@
+table sellers
+	lineageTag: 3637d1f8-f95f-409b-b230-563ff8b46d46
+
+	measure seller_orders = DISTINCTCOUNT ( order_items[order_id] )
+		formatString: 0
+		lineageTag: 149224c3-7dbb-489f-bc26-8960f33d4c7d
+
+	measure repeate_customers =
+			CALCULATE(
+			    DISTINCT(customers[customer_unique_id]),
+			    )
+		lineageTag: 01cf23f2-13de-40be-9297-169e132b00a2
+
+	column seller_id
+		dataType: string
+		lineageTag: 77bebb01-7a92-48f4-81a3-8b9b78fc81f5
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_zip_code_prefix
+		dataType: string
+		lineageTag: 7318fc09-9223-4f2b-8ff3-6fdfb6d9a9b9
+		summarizeBy: none
+		sourceColumn: seller_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_city
+		dataType: string
+		lineageTag: 6bffec84-29f7-4798-bf3c-dc32fe2529a6
+		summarizeBy: none
+		sourceColumn: seller_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_state
+		dataType: string
+		lineageTag: d7f3d3ab-dea1-45d1-8f9c-a682cd03ce82
+		summarizeBy: none
+		sourceColumn: seller_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition sellers = m
+		mode: import
+		source =
+				let
+				    來源 = GoogleBigQuery.Database([Implementation="2.0", BillingProject="olist-511414"]),
+				    #"olist-511414_Database" = 來源{[Name="olist-511414",Kind="Database"]}[Data],
+				    olist_Schema = #"olist-511414_Database"{[Name="olist",Kind="Schema"]}[Data],
+				    sellers_Table = olist_Schema{[Name="sellers",Kind="Table"]}[Data]
+				in
+				    sellers_Table
+
+	annotation PBI_ResultType = Table
+

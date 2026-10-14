@@ -1,0 +1,164 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 532.41875952528744,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1287.4187595252872,
+            "y": 325.87323762177209
+          },
+          "nodeIndex": "customers",
+          "nodeLineageTag": "41758660-eace-4905-98c3-3a13cefcc3ac",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1521.4187595252874,
+            "y": 291.39461202711567
+          },
+          "nodeIndex": "geolocation",
+          "nodeLineageTag": "8ed45256-58c5-4cd7-ad8a-caa865668053",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 339.91918620261276,
+            "y": 266.30137071766853
+          },
+          "nodeIndex": "order_items",
+          "nodeLineageTag": "91a74103-c31b-49db-b1f4-44bbd62223b4",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 713.2077788920094,
+            "y": 532.78922405423134
+          },
+          "nodeIndex": "order_payments",
+          "nodeLineageTag": "85f15a19-bb13-4945-aa5a-ca7d62cff782",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 698.70981093777459,
+            "y": -50
+          },
+          "nodeIndex": "order_reviews",
+          "nodeLineageTag": "63045a9b-e9f7-4a09-9d4f-ca6e31aaf0db",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1003.1849743410806,
+            "y": 270.04367513249451
+          },
+          "nodeIndex": "orders",
+          "nodeLineageTag": "3f299350-2b42-4e3d-8a9e-9cbf3b76a270",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1805.4187595252874,
+            "y": 327.39461202711567
+          },
+          "nodeIndex": "product_category_name_translation",
+          "nodeLineageTag": "7b39e304-2e46-451e-8a4e-9e5643587a2a",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50.012290978392,
+            "y": 43.901667326327356
+          },
+          "nodeIndex": "products",
+          "nodeLineageTag": "a81e609f-9700-41fe-a670-137606c4e1b6",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 513.69777111971644
+          },
+          "nodeIndex": "sellers",
+          "nodeLineageTag": "3637d1f8-f95f-409b-b230-563ff8b46d46",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 628.94043607977551,
+            "y": 253.9824999460896
+          },
+          "nodeIndex": "v_orders",
+          "nodeLineageTag": "bf5e1892-1a77-4b64-84a1-d222a2307fcb",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2039.4187595252874,
+            "y": 291.39461202711567
+          },
+          "nodeIndex": "timecell",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "所有資料表",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "所有資料表",
+  "defaultDiagram": "所有資料表"
+}

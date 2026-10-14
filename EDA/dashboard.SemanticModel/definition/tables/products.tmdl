@@ -1,0 +1,95 @@
+table products
+	lineageTag: a81e609f-9700-41fe-a670-137606c4e1b6
+
+	column product_id
+		dataType: string
+		lineageTag: c8236bd8-4a1a-49e1-83a4-e2a33e8b24ab
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_category_name
+		dataType: string
+		lineageTag: d147b9a9-05ab-4570-8e5a-9fe3972369ef
+		summarizeBy: none
+		sourceColumn: product_category_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name_lenght
+		dataType: int64
+		formatString: 0
+		lineageTag: 59ff3d93-c403-472e-8631-c7bd0f610f82
+		summarizeBy: none
+		sourceColumn: product_name_lenght
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_description_lenght
+		dataType: int64
+		formatString: 0
+		lineageTag: 10ce65aa-fca9-45ff-80d3-0d4855ed365b
+		summarizeBy: none
+		sourceColumn: product_description_lenght
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_photos_qty
+		dataType: int64
+		formatString: 0
+		lineageTag: 2a0e362c-0562-4fbf-8d69-401ab6259140
+		summarizeBy: none
+		sourceColumn: product_photos_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_weight_g
+		dataType: int64
+		formatString: 0
+		lineageTag: 17825e3e-5ac9-4edd-b7f4-5360e22a22d6
+		summarizeBy: none
+		sourceColumn: product_weight_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_length_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: edc75f46-97ef-4020-a000-84beb536175d
+		summarizeBy: none
+		sourceColumn: product_length_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_height_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 3eb4f090-8edd-4462-bee0-80bbeaf8f73b
+		summarizeBy: none
+		sourceColumn: product_height_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_width_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: a8510d26-98f7-4981-b565-ec40feb1a84c
+		summarizeBy: none
+		sourceColumn: product_width_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	partition products = m
+		mode: import
+		source =
+				let
+				    來源 = GoogleBigQuery.Database([Implementation="2.0", BillingProject="olist-511414"]),
+				    #"olist-511414_Database" = 來源{[Name="olist-511414",Kind="Database"]}[Data],
+				    olist_Schema = #"olist-511414_Database"{[Name="olist",Kind="Schema"]}[Data],
+				    products_Table = olist_Schema{[Name="products",Kind="Table"]}[Data]
+				in
+				    products_Table
+
+	annotation PBI_ResultType = Table
+

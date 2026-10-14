@@ -1,0 +1,60 @@
+table order_payments
+	lineageTag: 85f15a19-bb13-4945-aa5a-ca7d62cff782
+
+	column order_id
+		dataType: string
+		lineageTag: 5b518042-437d-43f1-b3b3-a09a00cd43b4
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_sequential
+		dataType: int64
+		formatString: 0
+		lineageTag: 463533b6-5a7f-4fc6-ae07-a530e850561a
+		summarizeBy: sum
+		sourceColumn: payment_sequential
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_type
+		dataType: string
+		lineageTag: 519b140a-9f41-4822-a2f9-46eb1f5db8f7
+		summarizeBy: none
+		sourceColumn: payment_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_installments
+		dataType: int64
+		formatString: 0
+		lineageTag: 77fa187d-f428-4e41-b634-cae82cad107a
+		summarizeBy: sum
+		sourceColumn: payment_installments
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_value
+		dataType: double
+		lineageTag: 3fc26eab-fff0-4f15-8bc5-e018f908ed81
+		summarizeBy: sum
+		sourceColumn: payment_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition order_payments = m
+		mode: import
+		source =
+				let
+				    來源 = GoogleBigQuery.Database([Implementation="2.0", BillingProject="olist-511414"]),
+				    #"olist-511414_Database" = 來源{[Name="olist-511414",Kind="Database"]}[Data],
+				    olist_Schema = #"olist-511414_Database"{[Name="olist",Kind="Schema"]}[Data],
+				    order_payments_Table = olist_Schema{[Name="order_payments",Kind="Table"]}[Data]
+				in
+				    order_payments_Table
+
+	annotation PBI_ResultType = Table
+
