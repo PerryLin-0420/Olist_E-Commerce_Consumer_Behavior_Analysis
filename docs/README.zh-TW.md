@@ -177,6 +177,8 @@ time_matrix\Auto_TM.bat
 
 <img src="dashboard_geo.png" alt="地區儀表板" width="900">
 
+完整解析度匯出：[dashboard.pdf](dashboard.pdf)
+
 | 頁面 | 內容 | 回答的問題 |
 |---|---|---|
 | **Time_Dashboard** | 切片器（年月、消費者州、顧客類型）、KPI 卡片（訂單數、營收、客單價、回購率）、星期 × 小時熱力矩陣、黃金時段矩陣、時段占比圓餅圖、每日時間線 | 什麼時候買？ |

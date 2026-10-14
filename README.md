@@ -177,6 +177,8 @@ An interactive Power BI dashboard on the same data (imported from BigQuery), in 
 
 <img src="docs/dashboard_geo.png" alt="Geographic dashboard" width="900">
 
+Full-resolution export: [docs/dashboard.pdf](docs/dashboard.pdf)
+
 | Page | Visuals | Question |
 |---|---|---|
 | **Time_Dashboard** | Slicers (year-month, consumer state, customer type), KPI cards (orders, revenue, average order value, repeat rate), weekday × hour heat matrix, golden-slot matrix, slot share pie, daily timeline | What time do people buy? |
